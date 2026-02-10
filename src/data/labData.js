@@ -11,7 +11,7 @@ export const personnel = [
   },
   {
     role: "Undergraduate Fellow",
-    name: "Marco Lastname",
+    name: "Marco Rodriguez",
     focus: "Outreach programs.",
   },
 ];
