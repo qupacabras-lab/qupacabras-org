@@ -1,0 +1,178 @@
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+  --creature-lime: #98f05a;
+  --creature-emerald: #2e8f58;
+  --creature-blood: #b02b2b;
+  --creature-fog: rgba(147, 233, 115, 0.14);
+}
+
+body {
+  @apply bg-ink text-mist;
+  font-family: "Space Grotesk", "IBM Plex Sans", sans-serif;
+  background-color: #05080f;
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+}
+
+.glass {
+  background: linear-gradient(150deg, rgba(9, 18, 14, 0.9), rgba(15, 24, 37, 0.72));
+  border: 1px solid rgba(152, 240, 90, 0.22);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 24px 44px rgba(4, 8, 8, 0.42);
+  backdrop-filter: blur(18px);
+}
+
+.grid-fade {
+  background-image: linear-gradient(90deg, rgba(152, 240, 90, 0.08) 1px, transparent 1px),
+    linear-gradient(rgba(152, 240, 90, 0.08) 1px, transparent 1px);
+  background-size: 80px 80px;
+  mask-image: radial-gradient(circle at top, black 10%, transparent 65%);
+}
+
+.particle-canvas {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  background: radial-gradient(circle at top, rgba(12, 20, 16, 0.9), rgba(5, 8, 15, 0.98));
+}
+
+.creature-band {
+  background: linear-gradient(90deg, rgba(6, 10, 7, 0.9), rgba(17, 32, 24, 0.8) 40%, rgba(12, 10, 19, 0.9));
+  border-color: rgba(152, 240, 90, 0.18);
+}
+
+.fang-link {
+  position: relative;
+  transition: color 160ms ease;
+}
+
+.fang-link::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -5px;
+  height: 2px;
+  transform: scaleX(0);
+  transform-origin: left;
+  background: linear-gradient(90deg, var(--creature-lime), rgba(176, 43, 43, 0.9));
+  transition: transform 180ms ease;
+}
+
+.fang-link:hover::after {
+  transform: scaleX(1);
+}
+
+.beast-cta {
+  position: relative;
+  overflow: hidden;
+  border-radius: 9999px;
+  border: 1px solid rgba(152, 240, 90, 0.45);
+  background: linear-gradient(115deg, rgba(152, 240, 90, 0.95), rgba(62, 173, 97, 0.95));
+  color: #08110c;
+  box-shadow: 0 0 0 1px rgba(152, 240, 90, 0.24), 0 12px 28px rgba(8, 22, 13, 0.45);
+  transform: translateY(0) scale(1);
+  transition: transform 220ms ease, box-shadow 220ms ease, filter 220ms ease, border-color 220ms ease;
+}
+
+.beast-cta::before {
+  content: "";
+  position: absolute;
+  top: -26px;
+  right: 18%;
+  width: 140px;
+  height: 120px;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.3), transparent 60%);
+  pointer-events: none;
+}
+
+.beast-cta::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(110deg, transparent 28%, rgba(255, 255, 255, 0.3) 46%, transparent 64%);
+  transform: translateX(-135%) rotate(2deg);
+  pointer-events: none;
+}
+
+.beast-cta:hover,
+.beast-cta:focus-visible {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 0 0 1px rgba(152, 240, 90, 0.4), 0 18px 34px rgba(7, 24, 13, 0.5);
+  filter: saturate(1.08);
+}
+
+.beast-cta:hover::after,
+.beast-cta:focus-visible::after {
+  animation: ctaSlash 620ms ease-out 1;
+}
+
+.beast-cta:active {
+  transform: translateY(0) scale(0.98);
+}
+
+.beast-cta--ghost {
+  border: 1px solid rgba(152, 240, 90, 0.36);
+  background: rgba(9, 16, 11, 0.45);
+  color: #e8edf4;
+}
+
+.beast-cta--ghost:hover,
+.beast-cta--ghost:focus-visible {
+  border-color: rgba(152, 240, 90, 0.65);
+  background: rgba(16, 28, 20, 0.72);
+}
+
+.beast-icon {
+  border: 1px solid rgba(152, 240, 90, 0.35);
+  background: radial-gradient(circle at 40% 38%, rgba(176, 43, 43, 0.7), rgba(7, 9, 12, 0.95));
+  box-shadow: 0 0 18px rgba(176, 43, 43, 0.28);
+}
+
+.fade-in {
+  animation: fadeIn 0.9s ease-out both;
+}
+
+.rise-in {
+  animation: riseIn 0.9s ease-out both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes riseIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes ctaSlash {
+  from {
+    transform: translateX(-135%) rotate(2deg);
+  }
+  to {
+    transform: translateX(135%) rotate(2deg);
+  }
+}

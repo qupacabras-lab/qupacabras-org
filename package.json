@@ -1,0 +1,22 @@
+{
+  "name": "qupacabras",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "svelte-spa-router": "^4.0.1"
+  },
+  "devDependencies": {
+    "@sveltejs/vite-plugin-svelte": "^3.0.2",
+    "autoprefixer": "^10.4.20",
+    "postcss": "^8.4.38",
+    "svelte": "^4.2.18",
+    "tailwindcss": "^3.4.4",
+    "vite": "^5.4.1"
+  }
+}
