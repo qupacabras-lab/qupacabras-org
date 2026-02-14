@@ -1,20 +1,9 @@
 <script>
   import { fundingPrograms, publications } from "../data/labData.js";
 
-  const accentHues = [96, 110, 132, 8];
-
-  const sourceHue = {
-    NSF: 110,
-    DOE: 8,
-    "State of Colorado": 132,
-    "Industry Partners": 96
-  };
-
   const fundingStyle = (entry, index) => {
-    const fallback = accentHues[(entry.source.length + index) % accentHues.length];
-    const hue = sourceHue[entry.source] ?? fallback;
     const delay = (index % 6) * 70;
-    return `--fund-hue:${hue};animation-delay:${delay}ms;`;
+    return `animation-delay:${delay}ms;`;
   };
 
   const publicationsByFunder = (source) =>
@@ -48,7 +37,7 @@
     <div class="mt-10 grid gap-6">
       {#each fundingPrograms as entry, index (entry.source + entry.program)}
         <article
-          class={`funding-card glass rounded-3xl p-6 rise-in ${openStates[index] ? "funding-card--open" : ""}`}
+          class={`card-hover glass rounded-3xl p-6 rise-in ${openStates[index] ? "funding-card--open" : ""}`}
           style={fundingStyle(entry, index)}
           role="button"
           tabindex="0"
@@ -94,22 +83,6 @@
 </section>
 
 <style>
-  .funding-card {
-    position: relative;
-    overflow: hidden;
-    border-color: hsla(var(--fund-hue), 78%, 74%, 0.3);
-  }
-
-  .funding-card::before {
-    content: "";
-    position: absolute;
-    inset: auto -12% -45% auto;
-    width: 200px;
-    height: 200px;
-    background: radial-gradient(circle, hsla(var(--fund-hue), 90%, 62%, 0.2), transparent 64%);
-    pointer-events: none;
-  }
-
   .funding-summary {
     cursor: pointer;
   }

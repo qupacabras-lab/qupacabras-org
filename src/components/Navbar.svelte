@@ -47,7 +47,7 @@
 <nav class="creature-band relative z-20 border-b backdrop-blur">
   <div class="mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between md:gap-6">
     <div class="flex items-center justify-between gap-4 md:w-auto">
-      <a href="/" use:link class="flex items-center gap-3 text-lg font-semibold tracking-wide text-white">
+      <a href="/" use:link class="brand-link flex items-center gap-3 text-lg font-semibold tracking-wide text-white">
         <span class="beast-icon inline-flex h-10 w-10 items-center justify-center rounded-full text-xl">⚛︎</span>
         Qupacabras Lab
       </a>
@@ -66,7 +66,7 @@
       class={`mobile-nav w-full md:block md:w-auto ${mobileOpen ? "mobile-nav--open" : ""}`}
     >
       <div class="mobile-nav__inner flex flex-col gap-4 pb-2 text-sm uppercase tracking-[0.2em] text-white/70 md:flex-row md:items-center md:justify-end md:pb-0">
-      <a href="/" use:link class="fang-link hover:text-white">Home</a>
+      <a href="/" use:link class="nav-link fang-link hover:text-white">Home</a>
       <div
         class="relative"
         role="presentation"
@@ -84,7 +84,7 @@
         <a
           href="/about"
           use:link
-          class="fang-link hover:text-white"
+          class="nav-link fang-link hover:text-white"
           aria-haspopup="menu"
           aria-expanded={aboutMenuVisible}
           on:click={dismissAboutMenu}
@@ -97,7 +97,7 @@
           class:pointer-events-auto={aboutMenuVisible}
           class:opacity-100={aboutMenuVisible}
         >
-          <div class="min-w-[11rem] rounded-2xl border border-[#98f05a]/25 bg-[#0a1510]/95 p-2 shadow-[0_16px_28px_rgba(0,0,0,0.4)]">
+          <div class="nav-dropdown min-w-[11rem] rounded-2xl p-2">
             <a
               href="/about"
               use:link
@@ -123,9 +123,9 @@
           </div>
         </div>
       </div>
-      <a href="/research" use:link class="fang-link hover:text-white" on:click={closeMobile}>Research</a>
-      <a href="/publications" use:link class="fang-link hover:text-white" on:click={closeMobile}>Publications</a>
-      <a href="/funding" use:link class="fang-link hover:text-white" on:click={closeMobile}>Funding</a>
+      <a href="/research" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Research</a>
+      <a href="/publications" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Publications</a>
+      <a href="/funding" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Funding</a>
     </div>
   </div>
   </div>

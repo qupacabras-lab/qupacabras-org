@@ -5,7 +5,7 @@
   let ctx;
   let animationId;
   let particles = [];
-  let palette = ["#98f05a", "#2e8f58", "#b02b2b"];
+  let palette = ["#98971a", "#689d6a", "#cc241d"];
   let mouse = { x: 0, y: 0, active: false };
   const particleCount = 236;
 
@@ -72,7 +72,7 @@
         const dist = Math.sqrt(dx * dx + dy * dy);
         if (dist < 120) {
           const intensity = 0.08 * (1 - dist / 120);
-          ctx.strokeStyle = `rgba(152, 240, 90, ${intensity})`;
+          ctx.strokeStyle = `rgba(152, 151, 26, ${intensity})`;
           ctx.lineWidth = 1;
           ctx.beginPath();
           ctx.moveTo(a.x, a.y);

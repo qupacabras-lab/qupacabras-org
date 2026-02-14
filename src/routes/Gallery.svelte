@@ -35,17 +35,15 @@
   ];
 
   const mosaicPattern = ["md:col-span-2", "", "", "", "md:col-span-2", ""];
-  const accentHues = [96, 110, 132, 8];
 
   const tileClass = (index) => {
     const pattern = galleryPhotos.length > 2 ? mosaicPattern[index % mosaicPattern.length] : "";
-    return `gallery-tile glass rounded-3xl p-3 rise-in ${pattern}`;
+    return `gallery-tile card-hover glass rounded-3xl p-3 rise-in ${pattern}`;
   };
 
-  const tileStyle = (photo, index) => {
-    const hue = accentHues[(photo.title.length + index * 3) % accentHues.length];
+  const tileStyle = (index) => {
     const delay = `${(index % 8) * 70}ms`;
-    return `--tile-hue:${hue};animation-delay:${delay};`;
+    return `animation-delay:${delay};`;
   };
 </script>
 
@@ -67,7 +65,7 @@
   {#if galleryPhotos.length > 0}
     <div class="mt-10 grid gap-6 md:grid-cols-3">
       {#each galleryPhotos as photo, index (photo.title + photo.src)}
-        <article class={tileClass(index)} style={tileStyle(photo, index)}>
+        <article class={tileClass(index)} style={tileStyle(index)}>
           <img class="gallery-image w-full rounded-2xl object-cover" src={photo.src} alt={photo.title} loading="lazy" />
           <div class="px-2 pb-2 pt-4">
             <h2 class="text-lg font-semibold text-white">{photo.title}</h2>
@@ -81,13 +79,13 @@
 
 <style>
   .gallery-tile {
-    border-color: hsla(var(--tile-hue), 74%, 70%, 0.34);
+    border-color: var(--panel-border);
     overflow: hidden;
   }
 
   .gallery-image {
     height: clamp(180px, 26vw, 280px);
-    border: 1px solid hsla(var(--tile-hue), 76%, 72%, 0.3);
-    filter: saturate(1.08) contrast(1.04);
+    border: 1px solid var(--panel-border);
+    filter: saturate(1.05) contrast(1.03);
   }
 </style>

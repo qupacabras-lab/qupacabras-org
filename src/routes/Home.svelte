@@ -51,25 +51,10 @@
     },
   ];
 
-  const differentiators = {
-    title: "What sets Qupacabras apart",
-    description:
-      "We operate at the boundary of theory and deployment, building systems that are resilient, reproducible, and ready for field use. Our mission is to make quantum advantage tangible for scientists, students, and industry partners.",
-    highlights: [
-      {
-        title: "Open Quantum Stack",
-        description: "Reusable libraries for error mitigation and calibration.",
-      },
-      {
-        title: "Resilient Testbeds",
-        description: "Digital twins that accelerate device validation.",
-      },
-    ],
-  };
 </script>
 
-<section class="fade-in mx-auto w-full max-w-6xl px-6 pb-24 pt-16">
-  <div class="grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
+<section class="fade-in mx-auto w-full max-w-6xl px-6 pb-10 pt-10">
+  <div class="grid gap-8 lg:grid-cols-[1.2fr_0.8fr]">
     <div class="space-y-6">
       <p class="text-xs uppercase tracking-[0.4em] text-white/60">{hero.eyebrow}</p>
       <h1 class="text-4xl font-semibold text-white md:text-5xl">
@@ -87,12 +72,12 @@
         {/each}
       </div>
     </div>
-    <div class="glass rounded-3xl p-6 rise-in" style="animation-delay: 120ms;">
+    <div class="glass rounded-3xl p-5 rise-in" style="animation-delay: 120ms;">
       <div class="space-y-6">
         <h2 class="text-lg font-semibold text-white">{snapshot.title}</h2>
         <div class="grid gap-4">
           {#each snapshot.items as item}
-            <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
+            <div class="snapshot-card rounded-2xl border border-white/10 bg-white/5 p-4">
               <p class="text-xs uppercase tracking-[0.3em] text-white/60">{item.label}</p>
               <p class="mt-2 text-2xl font-semibold text-white">{item.value}</p>
             </div>
@@ -102,32 +87,28 @@
     </div>
   </div>
 
-  <div class="mt-16 grid gap-6 md:grid-cols-3">
+  <div class="mt-10 grid gap-6 md:grid-cols-3">
     {#each focusAreas as area, index}
       <div
         class="glass rounded-3xl p-6 rise-in"
         style={`animation-delay: ${180 + index * 60}ms;`}
       >
-        <h3 class="text-lg font-semibold text-white">{area.title}</h3>
+        <h3 class="text-base font-semibold text-white">{area.title}</h3>
         <p class="mt-3 text-sm text-white/70">{area.description}</p>
       </div>
     {/each}
   </div>
-
-  <div class="mt-16 glass rounded-3xl p-8">
-    <div class="grid gap-8 lg:grid-cols-[1fr_1fr]">
-      <div>
-        <h2 class="text-2xl font-semibold text-white">{differentiators.title}</h2>
-        <p class="mt-4 text-white/75">{differentiators.description}</p>
-      </div>
-      <div class="grid gap-4">
-        {#each differentiators.highlights as highlight}
-          <div class="rounded-2xl border border-white/10 bg-white/5 p-4">
-            <p class="text-sm font-semibold text-white">{highlight.title}</p>
-            <p class="mt-2 text-sm text-white/70">{highlight.description}</p>
-          </div>
-        {/each}
-      </div>
-    </div>
-  </div>
 </section>
+
+<style>
+  .snapshot-card {
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+  }
+
+  .snapshot-card:hover,
+  .snapshot-card:focus-within {
+    transform: translateY(-2px) scale(1.02);
+    border-color: rgba(215, 153, 33, 0.45);
+    box-shadow: 0 16px 30px rgba(29, 32, 33, 0.45);
+  }
+</style>

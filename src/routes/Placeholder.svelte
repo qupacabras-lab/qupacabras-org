@@ -61,16 +61,16 @@
   }
 
   .hazard-strip {
-    color: #f8f4e8;
+    color: var(--gb-fg-strong);
     text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
     box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08), inset 0 0 18px rgba(0, 0, 0, 0.5);
-    background-image: linear-gradient(rgba(6, 10, 7, 0.55), rgba(6, 10, 7, 0.55)),
+    background-image: linear-gradient(rgba(29, 32, 33, 0.65), rgba(29, 32, 33, 0.65)),
       repeating-linear-gradient(
         -45deg,
-        #a9f45e 0 14px,
-        #8bd84d 14px 28px,
-        #18210f 28px 42px,
-        #141b0f 42px 56px
+        var(--gb-accent) 0 14px,
+        var(--gb-yellow-deep) 14px 28px,
+        var(--gb-bg-soft) 28px 42px,
+        var(--gb-bg) 42px 56px
       );
   }
 </style>
