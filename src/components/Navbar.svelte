@@ -48,7 +48,9 @@
   <div class="mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between md:gap-6">
     <div class="flex items-center justify-between gap-4 md:w-auto">
       <a href="/" use:link class="brand-link flex items-center gap-3 text-lg font-semibold tracking-wide text-white">
-        <span class="beast-icon inline-flex h-10 w-10 items-center justify-center rounded-full text-xl">⚛︎</span>
+        <span class="beast-icon inline-flex h-10 w-10 items-center justify-center rounded-full">
+          <img src="/favicon.ico" alt="Qupacabras" class="h-6 w-6" />
+        </span>
         Qupacabras Lab
       </a>
       <button
