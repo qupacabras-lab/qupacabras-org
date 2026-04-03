@@ -1,4 +1,5 @@
 <script>
+  import { link } from "svelte-spa-router";
   import {
     fundingPrograms,
     formerPersonnel,
@@ -29,27 +30,12 @@
   const snapshot = {
     title: "Lab Snapshot",
     items: [
-      { label: "Research Themes", value: `${researchCount} active thrusts` },
-      { label: "Collaborations", value: `${collaborationsCount} funding partners` },
-      { label: "Student Training", value: `${studentTrainingCount} students trained` },
-      { label: "Publications", value: `${publicationsCount} papers published` },
+      { label: "Research Themes", value: `${researchCount} thrusts`, href: "/research" },
+      { label: "Collaborations", value: `${collaborationsCount} partners`, href: "/funding" },
+      { label: "Student Training", value: `${studentTrainingCount} students`, href: "/about" },
+      { label: "Publications", value: `${publicationsCount} papers`, href: "/publications" },
     ],
   };
-
-  const focusAreas = [
-    {
-      title: "Algorithmic Frontiers",
-      description: "Hybrid quantum-classical workflows for chemistry, logistics, and secure communications.",
-    },
-    {
-      title: "Hardware-Aware Design",
-      description: "Compilation pipelines tuned for ion traps, neutral atoms, and superconducting devices.",
-    },
-    {
-      title: "Quantum Workforce",
-      description: "Training a diverse team through immersive labs, open-source tools, and national workshops.",
-    },
-  ];
 
 </script>
 
@@ -72,31 +58,29 @@
         {/each}
       </div>
     </div>
+    <div class="glass overflow-hidden rounded-3xl rise-in" style="animation-delay: 120ms;">
+      <img
+        src="https://picsum.photos/seed/qupacabras-lab-temp/1200/900"
+        alt="Temporary lab placeholder"
+        class="h-full w-full object-cover"
+      />
+    </div>
+  </div>
+
+  <div class="mt-10">
     <div class="glass rounded-3xl p-5 rise-in" style="animation-delay: 120ms;">
-      <div class="space-y-6">
+      <div class="space-y-4">
         <h2 class="text-lg font-semibold text-white">{snapshot.title}</h2>
-        <div class="grid gap-4">
+        <div class="grid gap-3 md:grid-cols-4">
           {#each snapshot.items as item}
-            <div class="snapshot-card rounded-2xl border border-white/10 bg-white/5 p-4">
+            <a href={item.href} use:link class="snapshot-card block rounded-2xl border border-white/10 bg-white/5 p-3">
               <p class="text-xs uppercase tracking-[0.3em] text-white/60">{item.label}</p>
-              <p class="mt-2 text-2xl font-semibold text-white">{item.value}</p>
-            </div>
+              <p class="mt-1 text-lg font-semibold text-white">{item.value}</p>
+            </a>
           {/each}
         </div>
       </div>
     </div>
-  </div>
-
-  <div class="mt-10 grid gap-6 md:grid-cols-3">
-    {#each focusAreas as area, index}
-      <div
-        class="glass rounded-3xl p-6 rise-in"
-        style={`animation-delay: ${180 + index * 60}ms;`}
-      >
-        <h3 class="text-base font-semibold text-white">{area.title}</h3>
-        <p class="mt-3 text-sm text-white/70">{area.description}</p>
-      </div>
-    {/each}
   </div>
 </section>
 
@@ -106,7 +90,7 @@
   }
 
   .snapshot-card:hover,
-  .snapshot-card:focus-within {
+  .snapshot-card:focus-visible {
     transform: translateY(-2px) scale(1.02);
     border-color: rgba(215, 153, 33, 0.45);
     box-shadow: 0 16px 30px rgba(29, 32, 33, 0.45);

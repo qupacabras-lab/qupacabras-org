@@ -3,8 +3,14 @@
   import { formerPersonnel, personnel } from "../data/labData.js";
 
   const sectionLayouts = {
-    personnel: personnel.length > 1 ? "md:grid-cols-2" : "md:grid-cols-1",
-    alumni: formerPersonnel.length > 1 ? "md:grid-cols-2" : "md:grid-cols-1",
+    personnel:
+      personnel.length > 2 ? "md:grid-cols-2 lg:grid-cols-3" : personnel.length > 1 ? "md:grid-cols-2" : "md:grid-cols-1",
+    alumni:
+      formerPersonnel.length > 2
+        ? "md:grid-cols-2 lg:grid-cols-3"
+        : formerPersonnel.length > 1
+          ? "md:grid-cols-2"
+          : "md:grid-cols-1",
   };
 
   let personnelFlipped = personnel.map(() => false);
@@ -28,6 +34,10 @@
     const rgb = accentPalette[(member.name.length + index * 2) % accentPalette.length];
     return `--alumni-rgb:${rgb};`;
   };
+
+  const memberSlug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+
+  const headshotFor = (name, group) => `https://picsum.photos/seed/qupacabras-${group}-${memberSlug(name)}/320/320`;
 
   const togglePersonnel = (index) => {
     personnelFlipped = personnelFlipped.map((value, current) => (current === index ? !value : value));
@@ -76,12 +86,22 @@
             on:keydown={(event) => handleCardKey(event, togglePersonnel, index)}
           >
             <div class="about-card__inner">
-              <div class="about-card__face about-card__front glass rounded-3xl p-6">
-                <p class="text-sm uppercase tracking-[0.3em] text-white/60">{member.role}</p>
-                <h3 class="mt-3 text-xl font-semibold text-white">{member.name}</h3>
-                <p class="mt-2 text-sm text-white/70">{member.focus}</p>
+              <div class="about-card__face about-card__front about-card__front--spacious glass rounded-3xl pt-5">
+                <div class="about-card__profile gap-3">
+                  <img
+                    src={headshotFor(member.name, "personnel")}
+                    alt={`Headshot of ${member.name}`}
+                    class="headshot h-52 w-40 rounded-2xl md:h-56 md:w-44"
+                    loading="lazy"
+                  />
+                  <div class="about-card__copy">
+                    <p class="text-sm uppercase tracking-[0.3em] text-white/60">{member.role}</p>
+                    <h3 class="mt-2 text-xl font-semibold text-white">{member.name}</h3>
+                    <p class="mt-1 text-sm text-white/70">{member.focus}</p>
+                  </div>
+                </div>
               </div>
-              <div class="about-card__face about-card__back glass rounded-3xl p-6">
+              <div class="about-card__face about-card__back glass rounded-3xl px-5 py-6">
                 <p class="text-sm uppercase tracking-[0.3em] text-white/60">Profile</p>
                 <h3 class="mt-3 text-xl font-semibold text-white">More details soon</h3>
                 <p class="mt-2 text-sm text-white/70">
@@ -110,11 +130,21 @@
             on:keydown={(event) => handleCardKey(event, toggleAlumni, index)}
           >
             <div class="about-card__inner">
-              <div class="about-card__face about-card__front glass rounded-3xl p-6">
-                <h3 class="text-lg font-semibold text-white">{member.name}</h3>
-                <p class="mt-2 text-sm text-white/70">{member.currentRole}</p>
+              <div class="about-card__face about-card__front about-card__front--spacious glass rounded-3xl pt-5">
+                <div class="about-card__profile gap-3">
+                  <img
+                    src={headshotFor(member.name, "alumni")}
+                    alt={`Headshot of ${member.name}`}
+                    class="headshot h-52 w-40 rounded-2xl md:h-56 md:w-44"
+                    loading="lazy"
+                  />
+                  <div class="about-card__copy">
+                    <h3 class="text-lg font-semibold text-white">{member.name}</h3>
+                    <p class="mt-1 text-sm text-white/70">{member.currentRole}</p>
+                  </div>
+                </div>
               </div>
-              <div class="about-card__face about-card__back glass rounded-3xl p-6">
+              <div class="about-card__face about-card__back glass rounded-3xl px-5 py-6">
                 <p class="text-sm uppercase tracking-[0.3em] text-white/60">Alumni</p>
                 <h3 class="mt-3 text-xl font-semibold text-white">Updates coming soon</h3>
                 <p class="mt-2 text-sm text-white/70">
@@ -137,9 +167,36 @@
 
   .about-card__inner {
     position: relative;
-    min-height: 160px;
+    min-height: 402px;
     transform-style: preserve-3d;
     transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
+  .about-card__profile {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    padding-bottom: 1.5rem;
+  }
+
+  .about-card__copy {
+    width: 100%;
+    padding-inline: 0.875rem;
+  }
+
+  .headshot {
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    object-fit: cover;
+    box-shadow: 0 10px 22px rgba(29, 32, 33, 0.45);
+    flex-shrink: 0;
+  }
+
+  @media (max-width: 767px) {
+    .about-card__inner {
+      min-height: 382px;
+    }
   }
 
   .about-card__face {
@@ -150,6 +207,10 @@
 
   .about-card__front {
     transform: rotateY(0deg);
+  }
+
+  .about-card__front--spacious {
+    padding-bottom: 3.5rem;
   }
 
   .about-card__back {

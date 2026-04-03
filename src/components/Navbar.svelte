@@ -1,46 +1,14 @@
 <script>
   import { link } from "svelte-spa-router";
 
-  let aboutHovered = false;
-  let aboutFocused = false;
-  let aboutDismissed = false;
   let mobileOpen = false;
-
-  $: aboutMenuVisible = (aboutHovered || aboutFocused) && !aboutDismissed;
-
-  const openAboutMenu = () => {
-    aboutDismissed = false;
-  };
-
-  const closeAboutMenu = () => {
-    aboutHovered = false;
-    aboutFocused = false;
-    aboutDismissed = false;
-  };
-
-  const handleAboutFocusOut = (event) => {
-    const nextTarget = event.relatedTarget;
-    if (event.currentTarget && nextTarget && event.currentTarget.contains(nextTarget)) {
-      return;
-    }
-    aboutFocused = false;
-  };
-
-  const dismissAboutMenu = () => {
-    aboutDismissed = true;
-    aboutFocused = false;
-  };
 
   const toggleMobile = () => {
     mobileOpen = !mobileOpen;
-    if (!mobileOpen) {
-      closeAboutMenu();
-    }
   };
 
   const closeMobile = () => {
     mobileOpen = false;
-    closeAboutMenu();
   };
 </script>
 
@@ -48,8 +16,8 @@
   <div class="mx-auto flex w-full max-w-6xl flex-col gap-4 px-6 py-5 md:flex-row md:items-center md:justify-between md:gap-6">
     <div class="flex items-center justify-between gap-4 md:w-auto">
       <a href="/" use:link class="brand-link flex items-center gap-3 text-lg font-semibold tracking-wide text-white">
-        <span class="beast-icon inline-flex h-10 w-10 items-center justify-center rounded-full">
-          <img src="/favicon.ico" alt="Qupacabras" class="h-6 w-6" />
+        <span class="beast-icon inline-flex h-9 w-9 items-center justify-center rounded-full">
+          <img src="/favicon.ico" alt="Qupacabras" class="h-8 w-8 object-contain" />
         </span>
         Qupacabras Lab
       </a>
@@ -68,69 +36,14 @@
       class={`mobile-nav w-full md:block md:w-auto ${mobileOpen ? "mobile-nav--open" : ""}`}
     >
       <div class="mobile-nav__inner flex flex-col gap-4 pb-2 text-sm uppercase tracking-[0.2em] text-white/70 md:flex-row md:items-center md:justify-end md:pb-0">
-      <a href="/" use:link class="nav-link fang-link hover:text-white">Home</a>
-      <div
-        class="relative"
-        role="presentation"
-        on:mouseenter={() => {
-          aboutHovered = true;
-          openAboutMenu();
-        }}
-        on:mouseleave={closeAboutMenu}
-        on:focusin={() => {
-          aboutFocused = true;
-          openAboutMenu();
-        }}
-        on:focusout={handleAboutFocusOut}
-      >
-        <a
-          href="/about"
-          use:link
-          class="nav-link fang-link hover:text-white"
-          aria-haspopup="menu"
-          aria-expanded={aboutMenuVisible}
-          on:click={dismissAboutMenu}
-        >
-          About
-        </a>
-        <div
-          class="pointer-events-none absolute left-0 top-full z-30 pt-2 opacity-0 transition duration-150"
-          role="menu"
-          class:pointer-events-auto={aboutMenuVisible}
-          class:opacity-100={aboutMenuVisible}
-        >
-          <div class="nav-dropdown min-w-[11rem] rounded-2xl p-2">
-            <a
-              href="/about"
-              use:link
-              class="block rounded-xl px-3 py-2 text-xs font-medium uppercase tracking-[0.16em] text-white/80 hover:bg-white/10 hover:text-white"
-              on:click={() => {
-                dismissAboutMenu();
-                closeMobile();
-              }}
-            >
-              Personnel
-            </a>
-            <a
-              href="/about/gallery"
-              use:link
-              class="mt-1 block rounded-xl px-3 py-2 text-xs font-medium uppercase tracking-[0.16em] text-white/80 hover:bg-white/10 hover:text-white"
-              on:click={() => {
-                dismissAboutMenu();
-                closeMobile();
-              }}
-            >
-              Gallery
-            </a>
-          </div>
-        </div>
+        <a href="/" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Home</a>
+        <a href="/about" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>About</a>
+        <a href="/research" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Research</a>
+        <a href="/publications" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Publications</a>
+        <a href="/funding" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Funding</a>
       </div>
-      <a href="/research" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Research</a>
-      <a href="/publications" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Publications</a>
-      <a href="/funding" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Funding</a>
     </div>
-  </div>
-  </div>
+   </div>
 </nav>
 
 <style>
