@@ -8,9 +8,7 @@
     researchThrusts,
   } from "../data/labData.js";
 
-  const studentTrainingCount = [...personnel, ...formerPersonnel].filter((member) =>
-    /undergraduate|graduate/i.test(member.role)
-  ).length;
+  const memberCount = personnel.length + formerPersonnel.length;
   const collaborationsCount = fundingPrograms.length;
   const researchCount = researchThrusts.length;
   const publicationsCount = publications.length;
@@ -32,7 +30,7 @@
     items: [
       { label: "Research Themes", value: `${researchCount} thrusts`, href: "/research" },
       { label: "Collaborations", value: `${collaborationsCount} partners`, href: "/funding" },
-      { label: "Student Training", value: `${studentTrainingCount} students`, href: "/about" },
+      { label: "Lab Members", value: `${memberCount} members`, href: "/about" },
       { label: "Publications", value: `${publicationsCount} papers`, href: "/publications" },
     ],
   };
