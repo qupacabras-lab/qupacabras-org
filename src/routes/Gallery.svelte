@@ -1,5 +1,6 @@
 <script>
   import { link } from "svelte-spa-router";
+  import { fly } from "svelte/transition";
 
   const galleryFileMap = import.meta.glob("../assets/gallery/**/*.{png,jpg,jpeg,webp,avif,gif}", {
     eager: true,
@@ -107,10 +108,12 @@
 
   let focusedAlbum = null;
   let focusedImageIndex = 0;
+  let imageScrollDirection = 0;
 
   const openAlbum = (album) => {
     focusedAlbum = album;
     focusedImageIndex = 0;
+    imageScrollDirection = 0;
   };
 
   const closeAlbum = () => {
@@ -123,6 +126,7 @@
       return;
     }
 
+    imageScrollDirection = 1;
     focusedImageIndex = (focusedImageIndex + 1) % focusedAlbum.images.length;
   };
 
@@ -131,8 +135,21 @@
       return;
     }
 
+    imageScrollDirection = -1;
     focusedImageIndex = (focusedImageIndex - 1 + focusedAlbum.images.length) % focusedAlbum.images.length;
   };
+
+  const incomingImageTransition = () => ({
+    x: imageScrollDirection * 90,
+    duration: 240,
+    opacity: 0.2,
+  });
+
+  const outgoingImageTransition = () => ({
+    x: -imageScrollDirection * 90,
+    duration: 240,
+    opacity: 0.2,
+  });
 
   const resolvedFocusedImage = () => {
     if (!focusedAlbum) {
@@ -213,33 +230,37 @@
       <button type="button" class="gallery-lightbox__backdrop" aria-label="Close focused album" on:click={closeAlbum}></button>
       <div class="gallery-lightbox__panel">
         <button type="button" class="gallery-lightbox__close" aria-label="Close focused album" on:click={closeAlbum}>×</button>
-        <img
-          class="gallery-lightbox__image"
-          src={resolvedFocusedImage()}
-          alt={`${focusedAlbum.title} photo ${focusedImageIndex + 1}`}
-          on:error={handleFocusedImageError}
-        />
-        <div class="gallery-lightbox__controls mt-4">
-          <button
-            type="button"
-            class="gallery-lightbox__nav"
-            aria-label="Previous photo"
-            on:click={previousImage}
-            disabled={focusedAlbum.images.length < 2}
-          >
-            Prev
-          </button>
-          <p class="text-sm tracking-[0.18em] text-white/70">{focusedImageIndex + 1} / {focusedAlbum.images.length}</p>
-          <button
-            type="button"
-            class="gallery-lightbox__nav"
-            aria-label="Next photo"
-            on:click={nextImage}
-            disabled={focusedAlbum.images.length < 2}
-          >
-            Next
-          </button>
+        <div class="gallery-lightbox__image-wrap">
+          {#key `${focusedAlbum.key}-${focusedImageIndex}`}
+            <img
+              class="gallery-lightbox__image"
+              src={resolvedFocusedImage()}
+              alt={`${focusedAlbum.title} photo ${focusedImageIndex + 1}`}
+              on:error={handleFocusedImageError}
+              in:fly={incomingImageTransition()}
+              out:fly={outgoingImageTransition()}
+            />
+          {/key}
+          {#if focusedAlbum.images.length > 1}
+            <button
+              type="button"
+              class="gallery-lightbox__edge gallery-lightbox__edge--left"
+              aria-label="Previous photo"
+              on:click={previousImage}
+            >
+              <span class="gallery-lightbox__arrow">&lt;</span>
+            </button>
+            <button
+              type="button"
+              class="gallery-lightbox__edge gallery-lightbox__edge--right"
+              aria-label="Next photo"
+              on:click={nextImage}
+            >
+              <span class="gallery-lightbox__arrow">&gt;</span>
+            </button>
+          {/if}
         </div>
+        <p class="mt-4 text-center text-sm tracking-[0.18em] text-white/70">{focusedImageIndex + 1} / {focusedAlbum.images.length}</p>
         <h2 class="mt-4 text-2xl font-semibold text-white">{focusedAlbum.title}</h2>
         <p class="mt-2 text-sm text-white/80">{focusedAlbum.longDescription}</p>
       </div>
@@ -300,35 +321,60 @@
   }
 
   .gallery-lightbox__image {
+    position: absolute;
+    inset: 0;
     width: 100%;
-    max-height: 65vh;
+    height: 100%;
     object-fit: contain;
+  }
+
+  .gallery-lightbox__image-wrap {
+    position: relative;
+    height: min(65vh, 72vw);
+    overflow: hidden;
     border-radius: 0.9rem;
     border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(0, 0, 0, 0.2);
   }
 
-  .gallery-lightbox__controls {
+  .gallery-lightbox__edge {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 16.6667%;
+    border: 0;
+    background: rgba(255, 255, 255, 0);
+    color: rgba(255, 255, 255, 0.66);
+    transition: background 160ms ease, color 160ms ease;
+    cursor: pointer;
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 0.75rem;
+    justify-content: center;
+    z-index: 1;
   }
 
-  .gallery-lightbox__nav {
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.28);
-    background: rgba(29, 32, 33, 0.8);
-    color: #fff;
-    font-size: 0.75rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-    padding: 0.55rem 0.9rem;
-    cursor: pointer;
+  .gallery-lightbox__edge--left {
+    left: 0;
+    border-top-left-radius: 0.9rem;
+    border-bottom-left-radius: 0.9rem;
   }
 
-  .gallery-lightbox__nav:disabled {
-    opacity: 0.45;
-    cursor: not-allowed;
+  .gallery-lightbox__edge--right {
+    right: 0;
+    border-top-right-radius: 0.9rem;
+    border-bottom-right-radius: 0.9rem;
+  }
+
+  .gallery-lightbox__edge:hover,
+  .gallery-lightbox__edge:focus-visible {
+    background: rgba(255, 255, 255, 0.08);
+    color: rgba(255, 255, 255, 0.95);
+  }
+
+  .gallery-lightbox__arrow {
+    font-size: clamp(1.4rem, 2.2vw, 2rem);
+    font-weight: 400;
+    line-height: 1;
   }
 
   .gallery-lightbox__close {
@@ -344,5 +390,6 @@
     font-size: 1.3rem;
     line-height: 1;
     cursor: pointer;
+    z-index: 2;
   }
 </style>
