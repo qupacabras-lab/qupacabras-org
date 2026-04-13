@@ -68,10 +68,13 @@
         class="mb-3 w-[min(92vw,22rem)] rounded-2xl border border-white/15 bg-[rgba(29,32,33,0.94)] p-4 text-sm text-white/85 shadow-[0_18px_36px_rgba(0,0,0,0.45)] backdrop-blur-md"
         transition:fly={{ y: 12, duration: 220, opacity: 0.25 }}
       >
-        <p class="text-xs uppercase tracking-[0.2em] text-white/60">Site Credits</p>
-        <p class="mt-3"><span class="font-semibold text-white">Color scheme:</span> Gruvbox-inspired charcoal, sand, amber, olive, and muted teal.</p>
+        <p class="text-xs uppercase tracking-[0.2em] text-white/60">Site Info</p>
+        <p class="mt-3"><span class="font-semibold text-white">Purpose:</span> Official website for CSU's Quantum Computing Lab (Qupacabras).</p>
+        <p class="mt-2"><span class="font-semibold text-white">Frontend stack:</span> Svelte 4 + Tailwind CSS.</p>
+        <p class="mt-2"><span class="font-semibold text-white">Libraries & tools:</span> Vite, svelte-spa-router, PostCSS, and Autoprefixer.</p>
+        <p class="mt-2"><span class="font-semibold text-white">Design direction:</span> Gruvbox-inspired charcoal, sand, amber, olive, and muted teal.</p>
         <p class="mt-2"><span class="font-semibold text-white">Developer/Designer:</span> Leo Rodolico</p>
-        <p class="mt-2"><span class="font-semibold text-white">Models used:</span> GPT-5.3 Codex</p>
+        <p class="mt-2"><span class="font-semibold text-white">AI support:</span> GPT-5.3 Codex and Claude Sonnet 4.6</p>
       </div>
     {/if}
 
