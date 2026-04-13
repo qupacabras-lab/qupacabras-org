@@ -39,6 +39,15 @@
 
   const headshotFor = (name, group) => `https://picsum.photos/seed/qupacabras-${group}-${memberSlug(name)}/320/320`;
 
+  const resolvedHeadshot = (member, group) => member.image || headshotFor(member.name, group);
+
+  const handleHeadshotError = (event, member, group) => {
+    const fallback = headshotFor(member.name, group);
+    if (event.currentTarget.src !== fallback) {
+      event.currentTarget.src = fallback;
+    }
+  };
+
   const togglePersonnel = (index) => {
     personnelFlipped = personnelFlipped.map((value, current) => (current === index ? !value : value));
   };
@@ -89,10 +98,11 @@
               <div class="about-card__face about-card__front about-card__front--spacious glass rounded-3xl pt-5">
                 <div class="about-card__profile gap-3">
                   <img
-                    src={headshotFor(member.name, "personnel")}
+                    src={resolvedHeadshot(member, "personnel")}
                     alt={`Headshot of ${member.name}`}
                     class="headshot h-52 w-40 rounded-2xl md:h-56 md:w-44"
                     loading="lazy"
+                    on:error={(event) => handleHeadshotError(event, member, "personnel")}
                   />
                   <div class="about-card__copy">
                     <p class="text-sm uppercase tracking-[0.3em] text-white/60">{member.role}</p>
@@ -133,10 +143,11 @@
               <div class="about-card__face about-card__front about-card__front--spacious glass rounded-3xl pt-5">
                 <div class="about-card__profile gap-3">
                   <img
-                    src={headshotFor(member.name, "alumni")}
+                    src={resolvedHeadshot(member, "alumni")}
                     alt={`Headshot of ${member.name}`}
                     class="headshot h-52 w-40 rounded-2xl md:h-56 md:w-44"
                     loading="lazy"
+                    on:error={(event) => handleHeadshotError(event, member, "alumni")}
                   />
                   <div class="about-card__copy">
                     <h3 class="text-lg font-semibold text-white">{member.name}</h3>

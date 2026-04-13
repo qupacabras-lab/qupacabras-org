@@ -3,21 +3,25 @@ export const personnel = [
     role: "Lab Director",
     name: "Dr. Carlos Martiz Orrero",
     focus: "Assistant Professor researching quantum algorithms, quantum benchmarking, and quantum sensing.",
+    image: "/headshots/carlos-martiz-orrero.jpg",
   },
   {
     role: "PhD Student",
     name: "Leo Rodolico",
     focus: "PhD Student at Colorado State University, studying quantum error correction and quantum algorithms.",
+    image: "/headshots/leo-rodolico.jpg",
   },
   {
     role: "Undergraduate Student",
     name: "Marco Rodriguez",
     focus: "Undergraduate Student collaborating in research and outreach programs for the lab.",
+    image: "/headshots/marco-rodriguez.jpg",
   },
   {
     role: "Collaborator (M.S.)",
     name: "Jim Furches",
     focus: "Research collaborator at Pacific Northwest National Laboratory (PNNL), U.S. Department of Energy.",
+    image: "/headshots/jim-furches.jpg",
   },
 ];
 
