@@ -112,11 +112,15 @@
                 </div>
               </div>
               <div class="about-card__face about-card__back glass rounded-3xl px-5 py-6">
-                <p class="text-sm uppercase tracking-[0.3em] text-white/60">Profile</p>
-                <h3 class="mt-3 text-xl font-semibold text-white">More details soon</h3>
-                <p class="mt-2 text-sm text-white/70">
-                  This back side is intentionally a placeholder. Replace with real bios or links.
-                </p>
+                <p class="text-sm uppercase tracking-[0.3em] text-white/60">Profile Template</p>
+                <h3 class="mt-3 text-xl font-semibold text-white">{member.name}</h3>
+                <p class="mt-1 text-xs uppercase tracking-[0.22em] text-white/55">{member.role}</p>
+                <div class="mt-4 space-y-3 text-sm text-white/75">
+                  <p><span class="font-semibold text-white">Bio:</span> Add a 2-3 sentence overview here.</p>
+                  <p><span class="font-semibold text-white">Research:</span> Add focus areas, methods, and current projects.</p>
+                  <p><span class="font-semibold text-white">Contact:</span> email@colostate.edu · personal site or scholar link.</p>
+                  <p><span class="font-semibold text-white">Fun fact:</span> Add one short personal detail.</p>
+                </div>
               </div>
             </div>
           </article>
@@ -156,11 +160,14 @@
                 </div>
               </div>
               <div class="about-card__face about-card__back glass rounded-3xl px-5 py-6">
-                <p class="text-sm uppercase tracking-[0.3em] text-white/60">Alumni</p>
-                <h3 class="mt-3 text-xl font-semibold text-white">Updates coming soon</h3>
-                <p class="mt-2 text-sm text-white/70">
-                  Placeholder back side for alumni highlights and links.
-                </p>
+                <p class="text-sm uppercase tracking-[0.3em] text-white/60">Alumni Template</p>
+                <h3 class="mt-3 text-xl font-semibold text-white">{member.name}</h3>
+                <div class="mt-4 space-y-3 text-sm text-white/75">
+                  <p><span class="font-semibold text-white">Current role:</span> Add title, org, and location.</p>
+                  <p><span class="font-semibold text-white">Lab work:</span> Add project area and contributions.</p>
+                  <p><span class="font-semibold text-white">Now focused on:</span> Add current interests or specialization.</p>
+                  <p><span class="font-semibold text-white">Links:</span> LinkedIn · Google Scholar · portfolio.</p>
+                </div>
               </div>
             </div>
           </article>

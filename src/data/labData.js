@@ -1,9 +1,9 @@
 export const personnel = [
   {
     role: "Lab Director",
-    name: "Dr. Carlos Martiz Orrero",
+    name: "Dr. Carlos Ortiz Marrero",
     focus: "Assistant Professor researching quantum algorithms, quantum benchmarking, and quantum sensing.",
-    image: "/headshots/carlos-martiz-orrero.jpg",
+    image: "/headshots/carlos-ortiz-marrero.jpg",
   },
   {
     role: "PhD Student",
