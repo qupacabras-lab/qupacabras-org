@@ -1,5 +1,5 @@
 <script>
-  import { link } from "svelte-spa-router";
+  import { link, location } from "svelte-spa-router";
 
   let mobileOpen = false;
 
@@ -22,7 +22,7 @@
         Qupacabras Lab
       </a>
       <button
-        class="inline-flex items-center justify-center rounded-full border border-white/20 px-4 py-2 text-xs uppercase tracking-[0.2em] text-white/80 md:hidden"
+        class="inline-flex items-center justify-center rounded-full border border-white/20 px-4 py-2 text-sm font-medium tracking-wide text-white/80 md:hidden"
         type="button"
         aria-expanded={mobileOpen}
         aria-controls="primary-navigation"
@@ -35,15 +35,34 @@
       id="primary-navigation"
       class={`mobile-nav w-full md:block md:w-auto ${mobileOpen ? "mobile-nav--open" : ""}`}
     >
-      <div class="mobile-nav__inner flex flex-col gap-4 pb-2 text-sm uppercase tracking-[0.2em] text-white/70 md:flex-row md:items-center md:justify-end md:pb-0">
-        <a href="/" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Home</a>
-        <a href="/about" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>About</a>
-        <a href="/research" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Research</a>
-        <a href="/publications" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Publications</a>
-        <a href="/funding" use:link class="nav-link fang-link hover:text-white" on:click={closeMobile}>Funding</a>
+      <div class="mobile-nav__inner flex flex-col gap-4 pb-2 text-sm text-white/70 md:flex-row md:items-center md:justify-end md:pb-0">
+        <a href="/" use:link class="nav-link fang-link hover:text-white"
+           class:text-white={$location === '/'}
+           class:is-active={$location === '/'}
+           on:click={closeMobile}>Home</a>
+        <a href="/about" use:link class="nav-link fang-link hover:text-white"
+           class:text-white={$location === '/about'}
+           class:is-active={$location === '/about'}
+           on:click={closeMobile}>About</a>
+        <a href="/research" use:link class="nav-link fang-link hover:text-white"
+           class:text-white={$location === '/research'}
+           class:is-active={$location === '/research'}
+           on:click={closeMobile}>Research</a>
+        <a href="/publications" use:link class="nav-link fang-link hover:text-white"
+           class:text-white={$location === '/publications'}
+           class:is-active={$location === '/publications'}
+           on:click={closeMobile}>Publications</a>
+        <a href="/funding" use:link class="nav-link fang-link hover:text-white"
+           class:text-white={$location === '/funding'}
+           class:is-active={$location === '/funding'}
+           on:click={closeMobile}>Funding</a>
+        <a href="/about/gallery" use:link class="nav-link fang-link hover:text-white"
+           class:text-white={$location === '/about/gallery'}
+           class:is-active={$location === '/about/gallery'}
+           on:click={closeMobile}>Gallery</a>
       </div>
     </div>
-   </div>
+  </div>
 </nav>
 
 <style>

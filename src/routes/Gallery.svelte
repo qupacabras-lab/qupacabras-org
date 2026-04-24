@@ -217,7 +217,9 @@
           </button>
           <div class="px-2 pb-2 pt-4">
             <h2 class="text-lg font-semibold text-white">{album.title}</h2>
-            <p class="mt-1 text-xs uppercase tracking-[0.22em] text-white/55">{album.images.length} photo{album.images.length === 1 ? "" : "s"}</p>
+            {#if album.images.length > 1}
+              <p class="mt-1 text-xs uppercase tracking-[0.22em] text-white/55">{album.images.length} photos</p>
+            {/if}
             <p class="mt-2 text-sm text-white/70">{album.shortDescription}</p>
           </div>
         </article>

@@ -138,6 +138,11 @@ a {
 }
 
 
+.beast-cta:focus-visible {
+  outline: 2px solid var(--gb-accent);
+  outline-offset: 2px;
+}
+
 .beast-cta:active {
   transform: translateY(0) scale(0.98);
 }
@@ -230,5 +235,30 @@ a {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+.fang-link.is-active::after {
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in,
+  .rise-in {
+    animation: none;
+  }
+
+  .particle-canvas {
+    display: none;
+  }
+
+  .beast-cta,
+  .card-hover,
+  .snapshot-card,
+  .brand-link,
+  .fang-link::after,
+  .mobile-nav,
+  .mobile-nav__inner {
+    transition: none;
   }
 }

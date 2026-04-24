@@ -1,6 +1,6 @@
 <script>
   import { fly } from "svelte/transition";
-  import Router from "svelte-spa-router";
+  import Router, { location } from "svelte-spa-router";
   import Navbar from "./components/Navbar.svelte";
   import Footer from "./components/Footer.svelte";
   import ParticleBackground from "./components/ParticleBackground.svelte";
@@ -22,6 +22,8 @@
     "/placeholder": Placeholder,
     "*": Placeholder,
   };
+
+  $: $location, window.scrollTo(0, 0);
 
   let creditsOpen = false;
 
@@ -51,16 +53,18 @@
 
 <svelte:window on:keydown={handleWindowKeydown} />
 
-<div class="relative min-h-screen">
+<div class="antialiased relative min-h-dvh">
   <ParticleBackground />
 
   <Navbar />
 
-  <main class="relative z-10">
+  <main class="relative z-10 isolate">
     <Router {routes} />
   </main>
 
-  <Footer />
+  {#if $location !== '/'}
+    <Footer />
+  {/if}
 
   <div class="fixed bottom-5 right-5 z-30 flex flex-col items-end">
     {#if creditsOpen}
@@ -74,7 +78,7 @@
         <p class="mt-2"><span class="font-semibold text-white">Libraries & tools:</span> Vite, svelte-spa-router, PostCSS, and Autoprefixer.</p>
         <p class="mt-2"><span class="font-semibold text-white">Design direction:</span> Gruvbox-inspired charcoal, sand, amber, olive, and muted teal.</p>
         <p class="mt-2"><span class="font-semibold text-white">Developer/Designer:</span> Leo Rodolico</p>
-        <p class="mt-2"><span class="font-semibold text-white">AI support:</span> GPT-5.3 Codex and Claude Sonnet 4.6</p>
+        <p class="mt-2"><span class="font-semibold text-white">AI support:</span> GPT-5.3 Codex and Claude Sonnet 4.6 with the <code class="text-white/70">ui.sh</code> skill</p>
       </div>
     {/if}
 
