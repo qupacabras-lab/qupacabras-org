@@ -30,6 +30,7 @@ export const personnel = [
     summary: "Quantum benchmarking and lab outreach.",
     focus:
       "Undergraduate researcher at CSU contributing to quantum benchmarking experiments and science outreach programs run by the lab.",
+    image: "/headshots/marco-rodriguez.jpg",
     contact: [
       { label: "marco.rodriguez@colostate.edu", href: "mailto:marco.rodriguez@colostate.edu", type: "email" },
     ],
