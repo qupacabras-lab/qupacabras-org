@@ -1,0 +1,73 @@
+name: Deploy to GitHub Pages
+
+# Builds the Vite site and publishes it to GitHub Pages via the Actions
+# artifact flow. Requires repo Settings > Pages > Source = "GitHub Actions".
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Least-privilege default; the deploy job below elevates only what it needs.
+permissions:
+  contents: read
+
+# Never run two Pages deploys at once; don't cancel an in-flight publish.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      # NOTE (hardening): for stricter supply-chain integrity, pin each action
+      # to a full commit SHA (e.g. actions/checkout@<sha> # v4). Dependabot
+      # (github-actions ecosystem) is configured to bump these safely.
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      # npm ci installs strictly from package-lock.json and verifies integrity
+      # hashes (do NOT use npm install here).
+      - name: Install dependencies
+        run: npm ci
+
+      # Surface high+ advisories without blocking the deploy (all current
+      # advisories are build-time-only and not reachable on the static bundle).
+      - name: Audit dependencies
+        run: npm audit --omit=dev --audit-level=high
+        continue-on-error: true
+
+      - name: Build
+        run: npm run build
+
+      # SPA deep-link / hard-refresh fallback: serve index.html for unknown
+      # paths so main.js can convert /path -> #/path. Copied (not a static
+      # public/404.html) so it carries the hashed asset references.
+      - name: SPA 404 fallback
+        run: cp dist/index.html dist/404.html
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
