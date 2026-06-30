@@ -28,8 +28,8 @@
   ).sort((a, b) => a.localeCompare(b));
 
   const heroImages = galleryImages.length > 0 ? galleryImages : ["/placeholder.svg"];
-  let heroImageIndex = 0;
-  let slidesPaused = false;
+  let heroImageIndex = $state(0);
+  let slidesPaused = $state(false);
 
   onMount(() => {
     setMeta(
@@ -152,7 +152,7 @@
             class="absolute right-3 top-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-black/55 text-xs text-white backdrop-blur transition hover:bg-black/75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d79921]"
             aria-label={slidesPaused ? "Play gallery slideshow" : "Pause gallery slideshow"}
             aria-pressed={slidesPaused}
-            on:click={() => (slidesPaused = !slidesPaused)}
+            onclick={() => (slidesPaused = !slidesPaused)}
           >
             {slidesPaused ? "▶" : "❚❚"}
           </button>

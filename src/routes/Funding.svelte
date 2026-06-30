@@ -18,7 +18,7 @@
   const publicationsByFunder = (source) =>
     publications.filter((publication) => publication.funders?.includes(source));
 
-  let openStates = fundingPrograms.map(() => false);
+  let openStates = $state(fundingPrograms.map(() => false));
 
   const toggleOpen = (index) => {
     openStates = openStates.map((state, current) => (current === index ? !state : state));
@@ -46,14 +46,15 @@
     {#if fundingPrograms.length > 0}
       <div class="mt-10 grid gap-6">
         {#each fundingPrograms as entry, index (entry.source + entry.program)}
+          <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
           <article
             class={`card-hover glass rounded-3xl p-6 rise-in [animation-delay:var(--stagger)] ${openStates[index] ? "funding-card--open" : ""}`}
             style={fundingStyle(entry, index)}
             role="button"
             tabindex="0"
             aria-expanded={openStates[index]}
-            on:click={() => toggleOpen(index)}
-            on:keydown={(event) => handleKey(event, index)}
+            onclick={() => toggleOpen(index)}
+            onkeydown={(event) => handleKey(event, index)}
           >
             <div class="funding-summary">
               <p class="text-xs font-medium tracking-wide text-white/60">{entry.source}</p>

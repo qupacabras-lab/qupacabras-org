@@ -187,4 +187,4 @@
   });
 </script>
 
-<canvas bind:this={canvas} class="particle-canvas" aria-hidden="true" role="presentation"></canvas>
+<canvas bind:this={canvas} class="particle-canvas" aria-hidden="true"></canvas>

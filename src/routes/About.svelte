@@ -22,8 +22,8 @@
           : "md:grid-cols-1",
   };
 
-  let personnelFlipped = personnel.map(() => false);
-  let alumniFlipped = formerPersonnel.map(() => false);
+  let personnelFlipped = $state(personnel.map(() => false));
+  let alumniFlipped = $state(formerPersonnel.map(() => false));
 
   const accentPalette = [
     "var(--gb-accent-rgb)",
@@ -95,14 +95,15 @@
         <h2 class="text-2xl font-semibold tracking-tight text-white">Personnel</h2>
         <div class={`mt-6 grid gap-6 ${sectionLayouts.personnel}`}>
           {#each personnel as member, index (member.role + member.name)}
+            <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
             <article
               class={`about-card card-hover rounded-3xl rise-in ${personnelFlipped[index] ? "is-flipped" : ""}`}
               style={personnelStyle(member, index)}
               role="button"
               tabindex="0"
               aria-pressed={personnelFlipped[index]}
-              on:click={() => togglePersonnel(index)}
-              on:keydown={(event) => handleCardKey(event, togglePersonnel, index)}
+              onclick={() => togglePersonnel(index)}
+              onkeydown={(event) => handleCardKey(event, togglePersonnel, index)}
             >
               <div class="about-card__inner">
                 <div class="about-card__face about-card__front about-card__front--spacious glass rounded-3xl pt-5">
@@ -114,7 +115,7 @@
                       loading={index === 0 ? "eager" : "lazy"}
                       fetchpriority={index === 0 ? "high" : undefined}
                       decoding="async"
-                      on:error={(event) => handleHeadshotError(event, member, "personnel")}
+                      onerror={(event) => handleHeadshotError(event, member, "personnel")}
                     />
                     <div class="about-card__copy">
                       <p class="text-xs font-medium tracking-wide text-white/60">{member.role}</p>
@@ -139,8 +140,8 @@
                             rel="noopener noreferrer"
                             aria-label={item.label}
                             class="text-white/70 hover:text-white transition-colors duration-150"
-                            on:click|stopPropagation
-                            on:keydown|stopPropagation
+                            onclick={(event) => event.stopPropagation()}
+                            onkeydown={(event) => event.stopPropagation()}
                           >
                             {#if item.type === 'email'}
                               <svg viewBox="0 0 20 20" class="size-6 shrink-0 fill-current" aria-hidden="true">
@@ -174,14 +175,15 @@
         <h2 class="text-2xl font-semibold tracking-tight text-white">Former Personnel</h2>
         <div class={`mt-6 grid gap-6 ${sectionLayouts.alumni}`}>
           {#each formerPersonnel as member, index (member.name)}
+            <!-- svelte-ignore a11y_no_noninteractive_element_to_interactive_role -->
             <article
               class={`about-card card-hover rounded-3xl ${alumniFlipped[index] ? "is-flipped" : ""}`}
               style={alumniStyle(member, index)}
               role="button"
               tabindex="0"
               aria-pressed={alumniFlipped[index]}
-              on:click={() => toggleAlumni(index)}
-              on:keydown={(event) => handleCardKey(event, toggleAlumni, index)}
+              onclick={() => toggleAlumni(index)}
+              onkeydown={(event) => handleCardKey(event, toggleAlumni, index)}
             >
               <div class="about-card__inner">
                 <div class="about-card__face about-card__front about-card__front--spacious glass rounded-3xl pt-5">
@@ -192,7 +194,7 @@
                       class="headshot h-56 w-44 rounded-2xl md:h-60 md:w-48"
                       loading="lazy"
                       decoding="async"
-                      on:error={(event) => handleHeadshotError(event, member, "alumni")}
+                      onerror={(event) => handleHeadshotError(event, member, "alumni")}
                     />
                     <div class="about-card__copy">
                       <h3 class="text-lg font-semibold text-white">{member.name}</h3>

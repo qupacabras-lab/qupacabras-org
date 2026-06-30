@@ -117,12 +117,12 @@
     return `animation-delay:${delay};`;
   };
 
-  let focusedAlbum = null;
-  let focusedImageIndex = 0;
-  let imageScrollDirection = 0;
+  let focusedAlbum = $state(null);
+  let focusedImageIndex = $state(0);
+  let imageScrollDirection = $state(0);
   let previouslyFocused = null;
-  let lightboxPanel;
-  let closeButton;
+  let lightboxPanel = $state(null);
+  let closeButton = $state(null);
   let touchStartX = 0;
 
   const openAlbum = async (album) => {
@@ -239,7 +239,7 @@
   };
 </script>
 
-<svelte:window on:keydown={handleWindowKeydown} />
+<svelte:window onkeydown={handleWindowKeydown} />
 
 <section class="fade-in mx-auto w-full max-w-6xl px-6 pb-24 pt-14">
   <div class="glass rounded-3xl p-8">
@@ -260,14 +260,14 @@
     <div class={`mt-10 grid gap-6 ${albumGridClass}`}>
       {#each galleryAlbums as album, albumIndex (album.key)}
         <article class={tileClass(albumIndex)} style={tileStyle(albumIndex)}>
-          <button type="button" class="gallery-focus-trigger w-full text-left" on:click={() => openAlbum(album)}>
+          <button type="button" class="gallery-focus-trigger w-full text-left" onclick={() => openAlbum(album)}>
             <img
               class="gallery-image w-full rounded-2xl object-cover"
               src={resolvedAlbumCover(album, albumIndex)}
               alt={`Cover image for ${album.title}`}
               loading="lazy"
               decoding="async"
-              on:error={(event) => handleAlbumCoverError(event, albumIndex)}
+              onerror={(event) => handleAlbumCoverError(event, albumIndex)}
             />
           </button>
           <div class="px-2 pb-2 pt-4">
@@ -291,13 +291,14 @@
 
   {#if focusedAlbum}
     <div class="gallery-lightbox" role="dialog" aria-modal="true" aria-label={focusedAlbum.title}>
-      <button type="button" class="gallery-lightbox__backdrop" aria-label="Close focused album" on:click={closeAlbum}></button>
+      <button type="button" class="gallery-lightbox__backdrop" aria-label="Close focused album" onclick={closeAlbum}></button>
       <div class="gallery-lightbox__panel" bind:this={lightboxPanel}>
-        <button type="button" class="gallery-lightbox__close" aria-label="Close focused album" on:click={closeAlbum} bind:this={closeButton}>×</button>
+        <button type="button" class="gallery-lightbox__close" aria-label="Close focused album" onclick={closeAlbum} bind:this={closeButton}>×</button>
+        <!-- svelte-ignore a11y_no_static_element_interactions -->
         <div
           class="gallery-lightbox__image-wrap"
-          on:touchstart={handleTouchStart}
-          on:touchend={handleTouchEnd}
+          ontouchstart={handleTouchStart}
+          ontouchend={handleTouchEnd}
         >
           {#key `${focusedAlbum.key}-${focusedImageIndex}`}
             <img
@@ -305,7 +306,7 @@
               src={resolvedFocusedImage()}
               alt={`${focusedAlbum.title} photo ${focusedImageIndex + 1}`}
               decoding="async"
-              on:error={handleFocusedImageError}
+              onerror={handleFocusedImageError}
               in:fly={incomingImageTransition()}
               out:fly={outgoingImageTransition()}
             />
@@ -315,7 +316,7 @@
               type="button"
               class="gallery-lightbox__edge gallery-lightbox__edge--left"
               aria-label="Previous photo"
-              on:click={previousImage}
+              onclick={previousImage}
             >
               <span class="gallery-lightbox__arrow">&lt;</span>
             </button>
@@ -323,7 +324,7 @@
               type="button"
               class="gallery-lightbox__edge gallery-lightbox__edge--right"
               aria-label="Next photo"
-              on:click={nextImage}
+              onclick={nextImage}
             >
               <span class="gallery-lightbox__arrow">&gt;</span>
             </button>

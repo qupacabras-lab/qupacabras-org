@@ -1,5 +1,5 @@
 <script>
-  import { link, location } from "svelte-spa-router";
+  import { link, router } from "svelte-spa-router";
 
   const navLinks = [
     { href: "/", label: "Home" },
@@ -10,7 +10,7 @@
     { href: "/about/gallery", label: "Gallery" },
   ];
 
-  let mobileOpen = false;
+  let mobileOpen = $state(false);
 
   const toggleMobile = () => {
     mobileOpen = !mobileOpen;
@@ -35,7 +35,7 @@
         type="button"
         aria-expanded={mobileOpen}
         aria-controls="primary-navigation"
-        on:click={toggleMobile}
+        onclick={toggleMobile}
       >
         {mobileOpen ? "Close" : "Menu"}
       </button>
@@ -47,10 +47,10 @@
       <div class="mobile-nav__inner flex flex-col gap-4 pb-2 text-sm text-white/70 md:flex-row md:items-center md:justify-end md:pb-0">
         {#each navLinks as { href, label } (href)}
           <a {href} use:link class="nav-link fang-link hover:text-white"
-             class:text-white={$location === href}
-             class:is-active={$location === href}
-             aria-current={$location === href ? 'page' : undefined}
-             on:click={closeMobile}>{label}</a>
+             class:text-white={router.location === href}
+             class:is-active={router.location === href}
+             aria-current={router.location === href ? 'page' : undefined}
+             onclick={closeMobile}>{label}</a>
         {/each}
       </div>
     </div>

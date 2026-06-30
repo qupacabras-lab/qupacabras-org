@@ -1,6 +1,6 @@
 <script>
   import { fly } from "svelte/transition";
-  import Router, { location } from "svelte-spa-router";
+  import Router, { router } from "svelte-spa-router";
   import { reducedMotion } from "./lib/motion.js";
   import Navbar from "./components/Navbar.svelte";
   import Footer from "./components/Footer.svelte";
@@ -24,9 +24,14 @@
     "*": Placeholder,
   };
 
-  $: $location, window.scrollTo(0, 0);
+  // Scroll to top whenever the route changes. router.location is a Svelte 5
+  // runes getter (svelte-spa-router v5), so reading it inside $effect tracks it.
+  $effect(() => {
+    router.location;
+    window.scrollTo(0, 0);
+  });
 
-  let creditsOpen = false;
+  let creditsOpen = $state(false);
 
   const toggleCredits = () => {
     creditsOpen = !creditsOpen;
@@ -56,12 +61,15 @@
   <title>Qupacabras | CSU Quantum Computing Lab</title>
 </svelte:head>
 
-<svelte:window on:keydown={handleWindowKeydown} />
+<svelte:window onkeydown={handleWindowKeydown} />
 
 <div class="antialiased relative min-h-dvh">
   <a
     href="#main"
-    on:click|preventDefault={skipToMain}
+    onclick={(event) => {
+      event.preventDefault();
+      skipToMain();
+    }}
     class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:border focus:border-[#d79921] focus:bg-[#1d2021] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
   >
     Skip to main content
@@ -75,7 +83,7 @@
     <Router {routes} />
   </main>
 
-  {#if $location !== '/'}
+  {#if router.location !== '/'}
     <Footer />
   {/if}
 
@@ -87,7 +95,7 @@
       >
         <p class="text-xs uppercase tracking-[0.2em] text-white/60">Site Info</p>
         <p class="mt-3"><span class="font-semibold text-white">Purpose:</span> Official website for CSU's Quantum Computing Lab (Qupacabras).</p>
-        <p class="mt-2"><span class="font-semibold text-white">Frontend stack:</span> Svelte 4 + Tailwind CSS.</p>
+        <p class="mt-2"><span class="font-semibold text-white">Frontend stack:</span> Svelte 5 + Tailwind CSS.</p>
         <p class="mt-2"><span class="font-semibold text-white">Libraries & tools:</span> Vite, svelte-spa-router, PostCSS, and Autoprefixer.</p>
         <p class="mt-2"><span class="font-semibold text-white">Design direction:</span> Gruvbox-inspired charcoal, sand, amber, olive, and muted teal.</p>
         <p class="mt-2"><span class="font-semibold text-white">Developer/Designer:</span> Leo Rodolico</p>
@@ -100,7 +108,7 @@
       class="credit-button inline-flex h-12 w-12 items-center justify-center rounded-full border border-white/20 text-lg font-semibold text-white"
       aria-expanded={creditsOpen}
       aria-label={creditsOpen ? "Hide site credits" : "Show site credits"}
-      on:click={toggleCredits}
+      onclick={toggleCredits}
     >
       ?
     </button>
