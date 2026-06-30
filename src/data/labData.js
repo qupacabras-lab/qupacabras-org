@@ -88,13 +88,22 @@ export const researchThrusts = [
       "Quantum signal processing and Heisenberg-limited metrology",
     ],
   },
+  {
+    title: "Quantum Error Correction for Sensing",
+    summary:
+      "We are developing quantum error correction protocols tailored to quantum sensing, where the aim is to protect fragile probe states so that sensors retain their quantum-enhanced precision under realistic noise. This thrust connects fault-tolerance techniques with quantum metrology to extend coherence and measurement sensitivity on near-term hardware.",
+    topics: [
+      "Error correction protocols for quantum sensors",
+      "Preserving metrological advantage under noise",
+      "Fault-tolerance strategies for near-term sensing hardware",
+    ],
+  },
 ];
 
 export const initiatives = [
   "Nonlocal games as cross-platform quantum benchmarks (trapped-ion, superconducting, neutral-atom)",
   "HybridLane SDK for hybrid continuous-discrete variable quantum computation",
   "Adaptive quantum generative training with unbounded loss objectives",
-  "Quantum error correction protocols for quantum sensing applications",
 ];
 
 export const fundingPrograms = [

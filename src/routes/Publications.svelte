@@ -1,5 +1,14 @@
 <script>
+  import { onMount } from "svelte";
   import { publications } from "../data/labData.js";
+  import { setMeta } from "../lib/seo.js";
+
+  onMount(() =>
+    setMeta(
+      "Publications | Qupacabras",
+      "Recent papers and reports from Qupacabras on quantum benchmarking, barren plateaus, and quantum generative models."
+    )
+  );
 </script>
 
 <section class="fade-in pb-24 pt-14">

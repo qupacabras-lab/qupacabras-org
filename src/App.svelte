@@ -54,10 +54,6 @@
 
 <svelte:head>
   <title>Qupacabras | CSU Quantum Computing Lab</title>
-  <meta
-    name="description"
-    content="Qupacabras is Colorado State University's Quantum Computing Lab advancing quantum benchmarking, variational algorithms, and quantum machine learning."
-  />
 </svelte:head>
 
 <svelte:window on:keydown={handleWindowKeydown} />

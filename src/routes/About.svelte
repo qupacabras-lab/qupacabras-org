@@ -1,6 +1,15 @@
 <script>
+  import { onMount } from "svelte";
   import { link } from "svelte-spa-router";
   import { formerPersonnel, personnel } from "../data/labData.js";
+  import { setMeta } from "../lib/seo.js";
+
+  onMount(() =>
+    setMeta(
+      "People | Qupacabras",
+      "Meet the faculty, students, and collaborators behind Qupacabras, Colorado State University's Quantum Computing Lab."
+    )
+  );
 
   const sectionLayouts = {
     personnel:

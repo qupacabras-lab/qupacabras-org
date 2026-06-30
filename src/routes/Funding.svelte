@@ -1,5 +1,14 @@
 <script>
+  import { onMount } from "svelte";
   import { fundingPrograms, publications } from "../data/labData.js";
+  import { setMeta } from "../lib/seo.js";
+
+  onMount(() =>
+    setMeta(
+      "Funding | Qupacabras",
+      "Grants and partnerships supporting Qupacabras, including the DOE Co-design Center for Quantum Advantage (C2QA) and Pacific Northwest National Laboratory."
+    )
+  );
 
   const fundingStyle = (entry, index) => {
     const delay = (index % 6) * 70;

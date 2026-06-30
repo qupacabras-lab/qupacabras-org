@@ -4,6 +4,7 @@
   import { fade } from "svelte/transition";
   import { link } from "svelte-spa-router";
   import { reducedMotion } from "../lib/motion.js";
+  import { setMeta } from "../lib/seo.js";
 
   const currentYear = new Date().getFullYear();
   import {
@@ -31,6 +32,11 @@
   let slidesPaused = false;
 
   onMount(() => {
+    setMeta(
+      "Qupacabras | CSU Quantum Computing Lab",
+      "Qupacabras is Colorado State University's Quantum Computing Lab advancing quantum benchmarking, variational algorithms, and quantum machine learning."
+    );
+
     const previousBodyOverflow = document.body.style.overflow;
     const previousHtmlOverflow = document.documentElement.style.overflow;
     const desktopQuery = window.matchMedia("(min-width: 1024px)");

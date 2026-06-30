@@ -1,8 +1,16 @@
 <script>
-  import { tick } from "svelte";
+  import { onMount, tick } from "svelte";
   import { link } from "svelte-spa-router";
   import { fly } from "svelte/transition";
   import { reducedMotion } from "../lib/motion.js";
+  import { setMeta } from "../lib/seo.js";
+
+  onMount(() =>
+    setMeta(
+      "Gallery | Qupacabras",
+      "Photos from the Qupacabras lab: conferences, events, and life in Colorado State University's Quantum Computing Lab."
+    )
+  );
 
   const galleryFileMap = import.meta.glob("../assets/gallery/**/*.{png,jpg,jpeg,webp,avif,gif}", {
     eager: true,

@@ -1,5 +1,9 @@
 <script>
+  import { onMount } from "svelte";
   import { link } from "svelte-spa-router";
+  import { setMeta } from "../lib/seo.js";
+
+  onMount(() => setMeta("Page Not Found | Qupacabras", "This page is under construction."));
 </script>
 
 <section class="fade-in mx-auto w-full max-w-4xl px-6 pb-24 pt-16">

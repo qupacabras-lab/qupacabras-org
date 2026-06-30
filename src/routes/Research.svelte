@@ -1,8 +1,17 @@
 <script>
+  import { onMount } from "svelte";
   import { initiatives, researchThrusts } from "../data/labData.js";
+  import { setMeta } from "../lib/seo.js";
 
   const thrustGridClass = researchThrusts.length > 1 ? "md:grid-cols-2" : "md:grid-cols-1";
   const initiativeVisible = initiatives.length > 0;
+
+  onMount(() =>
+    setMeta(
+      "Research | Qupacabras",
+      "Research thrusts spanning quantum benchmarking, variational algorithm trainability, quantum machine learning, hybrid quantum-classical computing, and quantum error correction for sensing."
+    )
+  );
 </script>
 
 <section class="fade-in pb-24 pt-14">
