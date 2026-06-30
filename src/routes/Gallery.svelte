@@ -1,6 +1,8 @@
 <script>
+  import { tick } from "svelte";
   import { link } from "svelte-spa-router";
   import { fly } from "svelte/transition";
+  import { reducedMotion } from "../lib/motion.js";
 
   const galleryFileMap = import.meta.glob("../assets/gallery/**/*.{png,jpg,jpeg,webp,avif,gif}", {
     eager: true,
@@ -11,7 +13,7 @@
     .map(([path, src]) => ({ path, src }))
     .sort((a, b) => a.path.localeCompare(b.path));
 
-  const galleryFallback = (index) => `https://picsum.photos/seed/qupacabra-lab-${index + 1}/1200/900`;
+  const galleryFallback = () => "/placeholder.svg";
 
   const fileNameFromPath = (path) => path.split("/").pop() || "lab-capture.jpg";
 
@@ -77,13 +79,14 @@
               images: sortedEntries.map((entry) => entry.src),
             };
           })
-      : Array.from({ length: 4 }, (_, index) => ({
-          key: `placeholder-${index + 1}`,
-          title: `Lab Set ${index + 1}`,
-          shortDescription: "Generated placeholder album while gallery folders are empty.",
-          longDescription: "Generated placeholder album while gallery folders are empty.",
-          images: [galleryFallback(index)],
-        }));
+      : [];
+
+  const albumGridClass =
+    galleryAlbums.length > 2
+      ? "md:grid-cols-3"
+      : galleryAlbums.length === 2
+        ? "mx-auto max-w-3xl md:grid-cols-2"
+        : "mx-auto max-w-md";
 
   const resolvedAlbumCover = (album, albumIndex) => album.images[0] || galleryFallback(albumIndex);
 
@@ -109,16 +112,61 @@
   let focusedAlbum = null;
   let focusedImageIndex = 0;
   let imageScrollDirection = 0;
+  let previouslyFocused = null;
+  let lightboxPanel;
+  let closeButton;
+  let touchStartX = 0;
 
-  const openAlbum = (album) => {
+  const openAlbum = async (album) => {
+    previouslyFocused = document.activeElement;
     focusedAlbum = album;
     focusedImageIndex = 0;
     imageScrollDirection = 0;
+    document.body.style.overflow = "hidden";
+    await tick();
+    if (closeButton) closeButton.focus();
   };
 
   const closeAlbum = () => {
     focusedAlbum = null;
     focusedImageIndex = 0;
+    document.body.style.overflow = "";
+    if (previouslyFocused && typeof previouslyFocused.focus === "function") {
+      previouslyFocused.focus();
+    }
+    previouslyFocused = null;
+  };
+
+  const handleTouchStart = (event) => {
+    touchStartX = event.changedTouches[0].clientX;
+  };
+
+  const handleTouchEnd = (event) => {
+    const dx = event.changedTouches[0].clientX - touchStartX;
+    if (Math.abs(dx) > 40) {
+      if (dx < 0) {
+        nextImage();
+      } else {
+        previousImage();
+      }
+    }
+  };
+
+  const trapFocus = (event) => {
+    if (!lightboxPanel) return;
+    const focusable = lightboxPanel.querySelectorAll(
+      'button, a[href], [tabindex]:not([tabindex="-1"])'
+    );
+    if (focusable.length === 0) return;
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first.focus();
+    }
   };
 
   const nextImage = () => {
@@ -140,14 +188,14 @@
   };
 
   const incomingImageTransition = () => ({
-    x: imageScrollDirection * 90,
-    duration: 240,
+    x: $reducedMotion ? 0 : imageScrollDirection * 90,
+    duration: $reducedMotion ? 0 : 240,
     opacity: 0.2,
   });
 
   const outgoingImageTransition = () => ({
-    x: -imageScrollDirection * 90,
-    duration: 240,
+    x: $reducedMotion ? 0 : -imageScrollDirection * 90,
+    duration: $reducedMotion ? 0 : 240,
     opacity: 0.2,
   });
 
@@ -173,14 +221,12 @@
 
     if (event.key === "Escape") {
       closeAlbum();
-    }
-
-    if (event.key === "ArrowRight") {
+    } else if (event.key === "ArrowRight") {
       nextImage();
-    }
-
-    if (event.key === "ArrowLeft") {
+    } else if (event.key === "ArrowLeft") {
       previousImage();
+    } else if (event.key === "Tab") {
+      trapFocus(event);
     }
   };
 </script>
@@ -203,7 +249,7 @@
   </div>
 
   {#if galleryAlbums.length > 0}
-    <div class="mt-10 grid gap-6 md:grid-cols-3">
+    <div class={`mt-10 grid gap-6 ${albumGridClass}`}>
       {#each galleryAlbums as album, albumIndex (album.key)}
         <article class={tileClass(albumIndex)} style={tileStyle(albumIndex)}>
           <button type="button" class="gallery-focus-trigger w-full text-left" on:click={() => openAlbum(album)}>
@@ -212,6 +258,7 @@
               src={resolvedAlbumCover(album, albumIndex)}
               alt={`Cover image for ${album.title}`}
               loading="lazy"
+              decoding="async"
               on:error={(event) => handleAlbumCoverError(event, albumIndex)}
             />
           </button>
@@ -225,19 +272,31 @@
         </article>
       {/each}
     </div>
+  {:else}
+    <div class="mt-10 glass rounded-3xl p-10 text-center">
+      <p class="text-lg font-semibold text-white">Gallery coming soon</p>
+      <p class="mt-2 text-sm text-white/70">
+        Lab photos from conferences, workshops, and events will appear here.
+      </p>
+    </div>
   {/if}
 
   {#if focusedAlbum}
     <div class="gallery-lightbox" role="dialog" aria-modal="true" aria-label={focusedAlbum.title}>
       <button type="button" class="gallery-lightbox__backdrop" aria-label="Close focused album" on:click={closeAlbum}></button>
-      <div class="gallery-lightbox__panel">
-        <button type="button" class="gallery-lightbox__close" aria-label="Close focused album" on:click={closeAlbum}>×</button>
-        <div class="gallery-lightbox__image-wrap">
+      <div class="gallery-lightbox__panel" bind:this={lightboxPanel}>
+        <button type="button" class="gallery-lightbox__close" aria-label="Close focused album" on:click={closeAlbum} bind:this={closeButton}>×</button>
+        <div
+          class="gallery-lightbox__image-wrap"
+          on:touchstart={handleTouchStart}
+          on:touchend={handleTouchEnd}
+        >
           {#key `${focusedAlbum.key}-${focusedImageIndex}`}
             <img
               class="gallery-lightbox__image"
               src={resolvedFocusedImage()}
               alt={`${focusedAlbum.title} photo ${focusedImageIndex + 1}`}
+              decoding="async"
               on:error={handleFocusedImageError}
               in:fly={incomingImageTransition()}
               out:fly={outgoingImageTransition()}
@@ -383,13 +442,16 @@
     position: absolute;
     top: 0.55rem;
     right: 0.7rem;
-    width: 2rem;
-    height: 2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.75rem;
+    height: 2.75rem;
     border-radius: 999px;
     border: 1px solid rgba(255, 255, 255, 0.28);
     background: rgba(29, 32, 33, 0.8);
     color: #fff;
-    font-size: 1.3rem;
+    font-size: 1.5rem;
     line-height: 1;
     cursor: pointer;
     z-index: 2;

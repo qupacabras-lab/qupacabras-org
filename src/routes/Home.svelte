@@ -1,7 +1,9 @@
 <script>
   import { onMount } from "svelte";
+  import { get } from "svelte/store";
   import { fade } from "svelte/transition";
   import { link } from "svelte-spa-router";
+  import { reducedMotion } from "../lib/motion.js";
 
   const currentYear = new Date().getFullYear();
   import {
@@ -24,8 +26,9 @@
     })
   ).sort((a, b) => a.localeCompare(b));
 
-  const heroImages = galleryImages.length > 0 ? galleryImages : ["https://picsum.photos/seed/qupacabras-lab-temp/1200/900"];
+  const heroImages = galleryImages.length > 0 ? galleryImages : ["/placeholder.svg"];
   let heroImageIndex = 0;
+  let slidesPaused = false;
 
   onMount(() => {
     const previousBodyOverflow = document.body.style.overflow;
@@ -33,23 +36,32 @@
     const desktopQuery = window.matchMedia("(min-width: 1024px)");
 
     const syncPageScrollLock = () => {
-      if (desktopQuery.matches) {
-        document.body.style.overflow = "hidden";
-        document.documentElement.style.overflow = "hidden";
-        return;
-      }
-
+      // Release any existing lock first so we can measure true content height,
+      // then only lock on large screens when everything actually fits — never
+      // trap content below the fold on short/zoomed/large-font viewports.
       document.body.style.overflow = previousBodyOverflow;
       document.documentElement.style.overflow = previousHtmlOverflow;
+
+      const fits = document.documentElement.scrollHeight <= window.innerHeight + 1;
+      if (desktopQuery.matches && fits) {
+        document.body.style.overflow = "hidden";
+        document.documentElement.style.overflow = "hidden";
+      }
     };
 
     syncPageScrollLock();
     desktopQuery.addEventListener("change", syncPageScrollLock);
+    window.addEventListener("resize", syncPageScrollLock);
+
+    // Auto-advancing content needs a pause control (WCAG 2.2.2); reduced-motion
+    // users start paused.
+    slidesPaused = get(reducedMotion);
 
     let intervalId;
 
     if (heroImages.length > 1) {
       intervalId = window.setInterval(() => {
+        if (slidesPaused) return;
         heroImageIndex = (heroImageIndex + 1) % heroImages.length;
       }, 4200);
     }
@@ -60,6 +72,7 @@
       }
 
       desktopQuery.removeEventListener("change", syncPageScrollLock);
+      window.removeEventListener("resize", syncPageScrollLock);
       document.body.style.overflow = previousBodyOverflow;
       document.documentElement.style.overflow = previousHtmlOverflow;
     };
@@ -109,20 +122,36 @@
           {/each}
         </div>
       </div>
-      <a href="/about/gallery" use:link class="hero-preview glass overflow-hidden rounded-3xl rise-in lg:self-start [animation-delay:120ms] group relative block">
-        {#key heroImageIndex}
-          <img
-            src={heroImages[heroImageIndex]}
-            alt=""
-            class="h-full w-full object-cover"
-            in:fade={{ duration: 420 }}
-            out:fade={{ duration: 420 }}
-          />
-        {/key}
-        <div class="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-black/60 to-transparent p-5 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-          <span class="text-sm font-semibold text-white">View Gallery →</span>
-        </div>
-      </a>
+      <div class="hero-preview relative lg:self-start">
+        <a href="/about/gallery" use:link class="glass group relative block h-full w-full overflow-hidden rounded-3xl rise-in [animation-delay:120ms]">
+          {#key heroImageIndex}
+            <img
+              src={heroImages[heroImageIndex]}
+              alt=""
+              class="h-full w-full object-cover"
+              loading="eager"
+              fetchpriority="high"
+              decoding="async"
+              in:fade={{ duration: $reducedMotion ? 0 : 420 }}
+              out:fade={{ duration: $reducedMotion ? 0 : 420 }}
+            />
+          {/key}
+          <div class="pointer-events-none absolute inset-0 flex items-end bg-gradient-to-t from-black/60 to-transparent p-5 opacity-100 transition-opacity duration-200 sm:opacity-0 sm:group-hover:opacity-100 sm:group-focus-visible:opacity-100">
+            <span class="text-sm font-semibold text-white">View Gallery →</span>
+          </div>
+        </a>
+        {#if heroImages.length > 1}
+          <button
+            type="button"
+            class="absolute right-3 top-3 z-10 inline-flex h-9 w-9 items-center justify-center rounded-full border border-white/25 bg-black/55 text-xs text-white backdrop-blur transition hover:bg-black/75 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d79921]"
+            aria-label={slidesPaused ? "Play gallery slideshow" : "Pause gallery slideshow"}
+            aria-pressed={slidesPaused}
+            on:click={() => (slidesPaused = !slidesPaused)}
+          >
+            {slidesPaused ? "▶" : "❚❚"}
+          </button>
+        {/if}
+      </div>
     </div>
 
     <div>
@@ -141,10 +170,10 @@
       </div>
     </div>
 
-    <div class="mt-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 text-xs text-white/35">
+    <div class="mt-5 flex flex-wrap items-center justify-between gap-x-6 gap-y-1 text-xs text-white/60">
       <span>© {currentYear} Qupacabras · Colorado State University · Fort Collins, CO</span>
-      <a href="mailto:contact@qupacabras-lab.org" class="hover:text-white/60 transition-colors duration-150">
-        contact@qupacabras-lab.org
+      <a href="mailto:carlos.ortiz.marrero@colostate.edu" class="text-white/70 hover:text-white transition-colors duration-150">
+        carlos.ortiz.marrero@colostate.edu
       </a>
     </div>
   </div>

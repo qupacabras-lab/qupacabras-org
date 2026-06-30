@@ -37,11 +37,12 @@
     <div class="mt-12 glass rounded-3xl p-8">
       <div class="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
         <div>
-          <h2 class="text-2xl font-semibold tracking-tight text-white">Collaborative testbeds</h2>
+          <h2 class="text-2xl font-semibold tracking-tight text-white">Hardware collaborations</h2>
           <p class="mt-4 text-pretty text-white/75">
-            Qupacabras maintains experimental pipelines for ion-trap, neutral-atom, and superconducting
-            platforms. These testbeds allow students and collaborators to prototype algorithms under
-            real hardware constraints.
+            Qupacabras builds benchmarking and software pipelines that run on externally hosted
+            ion-trap, neutral-atom, and superconducting quantum processors. Through collaborations with
+            national labs and hardware vendors, students and collaborators prototype and evaluate
+            algorithms under real hardware constraints.
           </p>
         </div>
         {#if initiativeVisible}

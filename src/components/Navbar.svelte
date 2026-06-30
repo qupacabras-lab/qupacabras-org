@@ -1,6 +1,15 @@
 <script>
   import { link, location } from "svelte-spa-router";
 
+  const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/about", label: "About" },
+    { href: "/research", label: "Research" },
+    { href: "/publications", label: "Publications" },
+    { href: "/funding", label: "Funding" },
+    { href: "/about/gallery", label: "Gallery" },
+  ];
+
   let mobileOpen = false;
 
   const toggleMobile = () => {
@@ -17,7 +26,7 @@
     <div class="flex items-center justify-between gap-4 md:w-auto">
       <a href="/" use:link class="brand-link flex items-center gap-3 text-lg font-semibold tracking-wide text-white">
         <span class="beast-icon inline-flex h-9 w-9 items-center justify-center rounded-full">
-          <img src="/favicon.ico" alt="Qupacabras" class="h-8 w-8 object-contain" />
+          <img src="/favicon.ico" alt="" class="h-8 w-8 object-contain" />
         </span>
         Qupacabras Lab
       </a>
@@ -36,30 +45,13 @@
       class={`mobile-nav w-full md:block md:w-auto ${mobileOpen ? "mobile-nav--open" : ""}`}
     >
       <div class="mobile-nav__inner flex flex-col gap-4 pb-2 text-sm text-white/70 md:flex-row md:items-center md:justify-end md:pb-0">
-        <a href="/" use:link class="nav-link fang-link hover:text-white"
-           class:text-white={$location === '/'}
-           class:is-active={$location === '/'}
-           on:click={closeMobile}>Home</a>
-        <a href="/about" use:link class="nav-link fang-link hover:text-white"
-           class:text-white={$location === '/about'}
-           class:is-active={$location === '/about'}
-           on:click={closeMobile}>About</a>
-        <a href="/research" use:link class="nav-link fang-link hover:text-white"
-           class:text-white={$location === '/research'}
-           class:is-active={$location === '/research'}
-           on:click={closeMobile}>Research</a>
-        <a href="/publications" use:link class="nav-link fang-link hover:text-white"
-           class:text-white={$location === '/publications'}
-           class:is-active={$location === '/publications'}
-           on:click={closeMobile}>Publications</a>
-        <a href="/funding" use:link class="nav-link fang-link hover:text-white"
-           class:text-white={$location === '/funding'}
-           class:is-active={$location === '/funding'}
-           on:click={closeMobile}>Funding</a>
-        <a href="/about/gallery" use:link class="nav-link fang-link hover:text-white"
-           class:text-white={$location === '/about/gallery'}
-           class:is-active={$location === '/about/gallery'}
-           on:click={closeMobile}>Gallery</a>
+        {#each navLinks as { href, label } (href)}
+          <a {href} use:link class="nav-link fang-link hover:text-white"
+             class:text-white={$location === href}
+             class:is-active={$location === href}
+             aria-current={$location === href ? 'page' : undefined}
+             on:click={closeMobile}>{label}</a>
+        {/each}
       </div>
     </div>
   </div>

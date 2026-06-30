@@ -37,7 +37,7 @@
 
   const memberSlug = (name) => name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
 
-  const headshotFor = (name, group) => `https://picsum.photos/seed/qupacabras-${group}-${memberSlug(name)}/320/320`;
+  const headshotFor = () => "/placeholder.svg";
 
   const resolvedHeadshot = (member, group) => member.image || headshotFor(member.name, group);
 
@@ -70,9 +70,9 @@
       <p class="text-sm font-medium tracking-wide text-white/60">About Qupacabras</p>
       <h1 class="mt-4 max-w-[35ch] text-4xl font-semibold tracking-tight text-balance text-white">People behind the lab</h1>
       <p class="mt-4 text-lg text-pretty text-white/75">
-        Qupacabras is a collaborative group of faculty, postdocs, graduate students, and undergraduate
-        researchers focused on building practical quantum computing systems. We value mentorship,
-        cross-disciplinary projects, and open science.
+        Qupacabras is a collaborative group of faculty, students, and external collaborators focused on
+        building practical quantum computing systems. We value mentorship, cross-disciplinary projects,
+        and open science.
       </p>
       <div class="mt-6">
         <a href="/about/gallery" use:link class="beast-cta inline-flex px-6 py-3 text-sm font-semibold">
@@ -102,7 +102,9 @@
                       src={resolvedHeadshot(member, "personnel")}
                       alt={`Headshot of ${member.name}`}
                       class="headshot h-56 w-44 rounded-2xl md:h-60 md:w-48"
-                      loading="lazy"
+                      loading={index === 0 ? "eager" : "lazy"}
+                      fetchpriority={index === 0 ? "high" : undefined}
+                      decoding="async"
                       on:error={(event) => handleHeadshotError(event, member, "personnel")}
                     />
                     <div class="about-card__copy">
@@ -111,9 +113,9 @@
                       <p class="mt-1 text-sm text-white/70">{member.summary}</p>
                     </div>
                   </div>
-                  <p class="absolute bottom-3 right-4 select-none text-sm text-white/30">↻</p>
+                  <p class="absolute bottom-3 right-4 select-none text-sm text-white/55" aria-hidden="true">↻</p>
                 </div>
-                <div class="about-card__face about-card__back glass rounded-3xl px-5 py-6">
+                <div class="about-card__face about-card__back glass rounded-3xl px-5 py-6" inert={!personnelFlipped[index] || undefined}>
                   <p class="text-xs font-medium tracking-wide text-white/60">Profile</p>
                   <h3 class="mt-3 text-xl font-semibold text-white">{member.name}</h3>
                   <p class="mt-1 text-xs font-medium tracking-wide text-white/55">{member.role}</p>
@@ -127,7 +129,9 @@
                             target="_blank"
                             rel="noopener noreferrer"
                             aria-label={item.label}
-                            class="text-white/50 hover:text-white transition-colors duration-150"
+                            class="text-white/70 hover:text-white transition-colors duration-150"
+                            on:click|stopPropagation
+                            on:keydown|stopPropagation
                           >
                             {#if item.type === 'email'}
                               <svg viewBox="0 0 20 20" class="size-6 shrink-0 fill-current" aria-hidden="true">
@@ -178,6 +182,7 @@
                       alt={`Headshot of ${member.name}`}
                       class="headshot h-56 w-44 rounded-2xl md:h-60 md:w-48"
                       loading="lazy"
+                      decoding="async"
                       on:error={(event) => handleHeadshotError(event, member, "alumni")}
                     />
                     <div class="about-card__copy">
@@ -186,14 +191,19 @@
                     </div>
                   </div>
                 </div>
-                <div class="about-card__face about-card__back glass rounded-3xl px-5 py-6">
+                <div class="about-card__face about-card__back glass rounded-3xl px-5 py-6" inert={!alumniFlipped[index] || undefined}>
                   <p class="text-xs font-medium tracking-wide text-white/60">Alumni</p>
                   <h3 class="mt-3 text-xl font-semibold text-white">{member.name}</h3>
                   <div class="mt-4 space-y-3 text-sm text-white/75">
-                    <p><span class="font-semibold text-white">Current role:</span> Add title, org, and location.</p>
-                    <p><span class="font-semibold text-white">Lab work:</span> Add project area and contributions.</p>
-                    <p><span class="font-semibold text-white">Now focused on:</span> Add current interests or specialization.</p>
-                    <p><span class="font-semibold text-white">Links:</span> LinkedIn · Google Scholar · portfolio.</p>
+                    {#if member.currentRole}
+                      <p><span class="font-semibold text-white">Current role:</span> {member.currentRole}</p>
+                    {/if}
+                    {#if member.labWork}
+                      <p><span class="font-semibold text-white">Lab work:</span> {member.labWork}</p>
+                    {/if}
+                    {#if member.focus}
+                      <p><span class="font-semibold text-white">Now focused on:</span> {member.focus}</p>
+                    {/if}
                   </div>
                 </div>
               </div>

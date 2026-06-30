@@ -29,8 +29,8 @@
       <p class="text-sm font-medium tracking-wide text-white/60">Funding</p>
       <h1 class="mt-4 max-w-[35ch] text-4xl font-semibold tracking-tight text-balance text-white">Grants and partnerships</h1>
       <p class="mt-4 text-lg text-pretty text-white/75">
-        Our research is supported by federal agencies, state initiatives, and industry partners
-        committed to expanding quantum computing capabilities.
+        Our research is supported by federal agencies and national laboratories, with institutional
+        support from Colorado State University, committed to expanding quantum computing capabilities.
       </p>
     </div>
 
@@ -76,8 +76,8 @@
       </p>
       <p class="mt-6 text-sm text-white/70">
         Email:
-        <a class="text-white/80 hover:text-white" href="mailto:partnerships@qupacabras-lab.org">
-          partnerships@qupacabras-lab.org
+        <a class="text-white/80 hover:text-white" href="mailto:carlos.ortiz.marrero@colostate.edu">
+          carlos.ortiz.marrero@colostate.edu
         </a>
       </p>
     </div>
@@ -86,12 +86,16 @@
 
 <style>
   .funding-summary {
+    position: relative;
+    padding-right: 1.75rem;
     cursor: pointer;
   }
 
   .funding-summary::after {
     content: "▾";
-    float: right;
+    position: absolute;
+    top: 0;
+    right: 0;
     color: rgba(255, 255, 255, 0.6);
     transition: transform 160ms ease;
   }

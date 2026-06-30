@@ -1,6 +1,7 @@
 <script>
   import { fly } from "svelte/transition";
   import Router, { location } from "svelte-spa-router";
+  import { reducedMotion } from "./lib/motion.js";
   import Navbar from "./components/Navbar.svelte";
   import Footer from "./components/Footer.svelte";
   import ParticleBackground from "./components/ParticleBackground.svelte";
@@ -41,24 +42,40 @@
     }
   };
 
+  // Skip link: move focus to <main> without changing the route hash.
+  const skipToMain = () => {
+    const main = document.getElementById("main");
+    if (main) {
+      main.focus();
+      main.scrollIntoView();
+    }
+  };
 </script>
 
 <svelte:head>
   <title>Qupacabras | CSU Quantum Computing Lab</title>
   <meta
     name="description"
-    content="Qupacabras is Colorado State University's Quantum Computing Lab advancing quantum algorithms, hardware-aware compilation, and quantum education."
+    content="Qupacabras is Colorado State University's Quantum Computing Lab advancing quantum benchmarking, variational algorithms, and quantum machine learning."
   />
 </svelte:head>
 
 <svelte:window on:keydown={handleWindowKeydown} />
 
 <div class="antialiased relative min-h-dvh">
+  <a
+    href="#main"
+    on:click|preventDefault={skipToMain}
+    class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:border focus:border-[#d79921] focus:bg-[#1d2021] focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+  >
+    Skip to main content
+  </a>
+
   <ParticleBackground />
 
   <Navbar />
 
-  <main class="relative z-10 isolate">
+  <main id="main" tabindex="-1" class="relative z-10 isolate focus:outline-none">
     <Router {routes} />
   </main>
 
@@ -70,7 +87,7 @@
     {#if creditsOpen}
       <div
         class="mb-3 w-[min(92vw,22rem)] rounded-2xl border border-white/15 bg-[rgba(29,32,33,0.94)] p-4 text-sm text-white/85 shadow-[0_18px_36px_rgba(0,0,0,0.45)] backdrop-blur-md"
-        transition:fly={{ y: 12, duration: 220, opacity: 0.25 }}
+        transition:fly={{ y: 12, duration: $reducedMotion ? 0 : 220, opacity: 0.25 }}
       >
         <p class="text-xs uppercase tracking-[0.2em] text-white/60">Site Info</p>
         <p class="mt-3"><span class="font-semibold text-white">Purpose:</span> Official website for CSU's Quantum Computing Lab (Qupacabras).</p>

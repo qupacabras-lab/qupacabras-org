@@ -3,11 +3,31 @@
 
   let canvas;
   let ctx;
-  let animationId;
+  let animationId = null;
   let particles = [];
   let palette = ["#98971a", "#689d6a", "#cc241d"];
   let mouse = { x: 0, y: 0, active: false };
   const particleCount = 236;
+
+  let running = false;
+  let prefersReducedMotion = false;
+  let lastWidth = 0;
+  let lastHeight = 0;
+  let resizeTimer;
+
+  const start = () => {
+    if (running || prefersReducedMotion) return;
+    running = true;
+    animationId = requestAnimationFrame(step);
+  };
+
+  const stop = () => {
+    running = false;
+    if (animationId) {
+      cancelAnimationFrame(animationId);
+      animationId = null;
+    }
+  };
 
   const createParticle = (width, height) => {
     const speed = 0.2 + Math.random() * 0.6;
@@ -26,9 +46,32 @@
   const resize = () => {
     if (!canvas) return;
     const { innerWidth, innerHeight } = window;
+    const widthChanged = innerWidth !== lastWidth;
+
     canvas.width = innerWidth;
     canvas.height = innerHeight;
-    particles = Array.from({ length: particleCount }, () => createParticle(innerWidth, innerHeight));
+
+    if (particles.length === 0) {
+      particles = Array.from({ length: particleCount }, () => createParticle(innerWidth, innerHeight));
+    } else if (widthChanged && lastWidth > 0) {
+      // Reposition existing particles proportionally instead of regenerating,
+      // so the field doesn't flicker when the mobile URL bar shows/hides
+      // (height-only changes are otherwise ignored).
+      const scaleX = innerWidth / lastWidth;
+      const scaleY = lastHeight > 0 ? innerHeight / lastHeight : 1;
+      for (const particle of particles) {
+        particle.x *= scaleX;
+        particle.y *= scaleY;
+      }
+    }
+
+    lastWidth = innerWidth;
+    lastHeight = innerHeight;
+  };
+
+  const handleResize = () => {
+    window.clearTimeout(resizeTimer);
+    resizeTimer = window.setTimeout(resize, 150);
   };
 
   const step = () => {
@@ -93,25 +136,55 @@
     const blood = styles.getPropertyValue("--creature-blood").trim();
     palette = [lime || palette[0], emerald || palette[1], blood || palette[2]];
     resize();
+
+    const motionQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+    prefersReducedMotion = motionQuery.matches;
+
     const handleMove = (event) => {
       mouse = { x: event.clientX, y: event.clientY, active: true };
     };
     const handleLeave = () => {
       mouse = { x: 0, y: 0, active: false };
     };
+    const handleVisibility = () => {
+      if (document.hidden) {
+        stop();
+      } else {
+        start();
+      }
+    };
+    const handleMotionChange = (event) => {
+      prefersReducedMotion = event.matches;
+      if (prefersReducedMotion) {
+        stop();
+        if (ctx && canvas) ctx.clearRect(0, 0, canvas.width, canvas.height);
+      } else if (!document.hidden) {
+        start();
+      }
+    };
 
-    window.addEventListener("resize", resize);
+    window.addEventListener("resize", handleResize);
     window.addEventListener("mousemove", handleMove);
     window.addEventListener("mouseleave", handleLeave);
-    animationId = requestAnimationFrame(step);
+    document.addEventListener("visibilitychange", handleVisibility);
+    motionQuery.addEventListener("change", handleMotionChange);
+
+    // Don't burn CPU/battery when reduced-motion is on (the canvas is also
+    // display:none via CSS in that case) or when the tab is hidden.
+    if (!prefersReducedMotion && !document.hidden) {
+      start();
+    }
 
     return () => {
-      window.removeEventListener("resize", resize);
+      stop();
+      window.clearTimeout(resizeTimer);
+      window.removeEventListener("resize", handleResize);
       window.removeEventListener("mousemove", handleMove);
       window.removeEventListener("mouseleave", handleLeave);
-      if (animationId) cancelAnimationFrame(animationId);
+      document.removeEventListener("visibilitychange", handleVisibility);
+      motionQuery.removeEventListener("change", handleMotionChange);
     };
   });
 </script>
 
-<canvas bind:this={canvas} class="particle-canvas"></canvas>
+<canvas bind:this={canvas} class="particle-canvas" aria-hidden="true" role="presentation"></canvas>

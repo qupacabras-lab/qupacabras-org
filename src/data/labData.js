@@ -15,9 +15,9 @@ export const personnel = [
   {
     role: "PhD Student",
     name: "Leo Rodolico",
-    summary: "Quantum error correction and algorithms.",
+    summary: "Quantum error correction for quantum sensing.",
     focus:
-      "PhD student at Colorado State University. Working on quantum error correction protocols and quantum algorithm design under Dr. Ortiz Marrero.",
+      "PhD student at Colorado State University, advised by Dr. Ortiz Marrero. Works on quantum error correction protocols for quantum sensing applications.",
     contact: [
       { label: "leonardo.rodolico@colostate.edu", href: "mailto:leonardo.rodolico@colostate.edu", type: "email" },
       { label: "GitHub", href: "https://github.com/elredl", type: "github" },
@@ -27,9 +27,9 @@ export const personnel = [
   {
     role: "Undergraduate Researcher",
     name: "Marco Rodriguez",
-    summary: "Quantum benchmarking and lab outreach.",
+    summary: "Quantum error correction for quantum sensing.",
     focus:
-      "Undergraduate researcher at CSU contributing to quantum benchmarking experiments and science outreach programs run by the lab.",
+      "Undergraduate researcher at CSU working on quantum error correction protocols for quantum sensing applications under Dr. Ortiz Marrero.",
     image: "/headshots/marco-rodriguez.jpg",
     contact: [
       { label: "marco.rodriguez@colostate.edu", href: "mailto:marco.rodriguez@colostate.edu", type: "email" },
@@ -94,6 +94,7 @@ export const initiatives = [
   "Nonlocal games as cross-platform quantum benchmarks (trapped-ion, superconducting, neutral-atom)",
   "HybridLane SDK for hybrid continuous-discrete variable quantum computation",
   "Adaptive quantum generative training with unbounded loss objectives",
+  "Quantum error correction protocols for quantum sensing applications",
 ];
 
 export const fundingPrograms = [
@@ -148,7 +149,7 @@ export const publications = [
     funders: ["U.S. Department of Energy"],
   },
   {
-    year: 2023,
+    year: 2024,
     venue: "Transactions on Machine Learning Research",
     title: "Using Skew to Assess the Quality of GAN-generated Image Features",
     summary:
@@ -159,7 +160,7 @@ export const publications = [
   {
     year: 2021,
     venue: "PRX Quantum",
-    title: "Entanglement Induced Barren Plateaus",
+    title: "Entanglement-Induced Barren Plateaus",
     summary:
       "We prove that highly entangled quantum states lead to exponentially vanishing gradients in variational quantum algorithms, establishing entanglement as a fundamental source of barren plateaus. The result provides rigorous guidance for ansatz design in near-term quantum computing.",
     href: "https://journals.aps.org/prxquantum/abstract/10.1103/PRXQuantum.2.040316",
