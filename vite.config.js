@@ -1,5 +1,6 @@
 import { defineConfig } from "vite";
 import { svelte } from "@sveltejs/vite-plugin-svelte";
+import { imagetools } from "vite-imagetools";
 
 // Inject a Content-Security-Policy meta tag into the built HTML only. It is
 // kept out of the dev server (apply: "build") so it does not block Vite HMR's
@@ -33,5 +34,13 @@ const cspPlugin = {
 };
 
 export default defineConfig({
-  plugins: [svelte(), cspPlugin],
+  plugins: [
+    svelte(),
+    // Generate responsive WebP derivatives for images imported with imagetools
+    // query directives (e.g. ?as=srcset). The include regex requires a `?`, so
+    // plain imports are left to Vite's normal asset handling and only queried
+    // imports are transformed.
+    imagetools({ include: /^[^?]+\.(jpe?g|png|webp|avif|gif|tiff)\?.*$/ }),
+    cspPlugin,
+  ],
 });

@@ -16,12 +16,17 @@
     eager: true,
     import: "default",
   });
+  const gallerySrcsetMap = import.meta.glob("../assets/gallery/**/*.{png,jpg,jpeg,webp,avif,gif}", {
+    query: { format: "webp", w: "320;640;960;1200", as: "srcset" },
+    eager: true,
+    import: "default",
+  });
 
   const galleryEntries = Object.entries(galleryFileMap)
-    .map(([path, src]) => ({ path, src }))
+    .map(([path, src]) => ({ path, src, srcset: gallerySrcsetMap[path] }))
     .sort((a, b) => a.path.localeCompare(b.path));
 
-  const galleryFallback = () => "/placeholder.svg";
+  const galleryFallback = () => ({ src: "/placeholder.svg", srcset: undefined });
 
   const fileNameFromPath = (path) => path.split("/").pop() || "lab-capture.jpg";
 
@@ -84,7 +89,7 @@
               title: metadata?.title || labelFromSlug(key.split("/").pop() || key),
               shortDescription,
               longDescription,
-              images: sortedEntries.map((entry) => entry.src),
+              images: sortedEntries.map((entry) => ({ src: entry.src, srcset: entry.srcset })),
             };
           })
       : [];
@@ -100,8 +105,9 @@
 
   const handleAlbumCoverError = (event, albumIndex) => {
     const fallback = galleryFallback(albumIndex);
-    if (event.currentTarget.src !== fallback) {
-      event.currentTarget.src = fallback;
+    if (!event.currentTarget.src.includes("placeholder.svg")) {
+      event.currentTarget.srcset = "";
+      event.currentTarget.src = fallback.src;
     }
   };
 
@@ -217,8 +223,9 @@
 
   const handleFocusedImageError = (event) => {
     const fallback = galleryFallback(focusedImageIndex);
-    if (event.currentTarget.src !== fallback) {
-      event.currentTarget.src = fallback;
+    if (!event.currentTarget.src.includes("placeholder.svg")) {
+      event.currentTarget.srcset = "";
+      event.currentTarget.src = fallback.src;
     }
   };
 
@@ -263,7 +270,9 @@
           <button type="button" class="gallery-focus-trigger w-full text-left" onclick={() => openAlbum(album)}>
             <img
               class="gallery-image w-full rounded-2xl object-cover"
-              src={resolvedAlbumCover(album, albumIndex)}
+              src={resolvedAlbumCover(album, albumIndex).src}
+              srcset={resolvedAlbumCover(album, albumIndex).srcset}
+              sizes="(min-width: 768px) 33vw, 100vw"
               alt={`Cover image for ${album.title}`}
               loading="lazy"
               decoding="async"
@@ -303,7 +312,9 @@
           {#key `${focusedAlbum.key}-${focusedImageIndex}`}
             <img
               class="gallery-lightbox__image"
-              src={resolvedFocusedImage()}
+              src={resolvedFocusedImage().src}
+              srcset={resolvedFocusedImage().srcset}
+              sizes="(min-width: 980px) 900px, 92vw"
               alt={`${focusedAlbum.title} photo ${focusedImageIndex + 1}`}
               decoding="async"
               onerror={handleFocusedImageError}

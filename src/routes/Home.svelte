@@ -20,14 +20,21 @@
   const researchCount = researchThrusts.length;
   const publicationsCount = publications.length;
 
-  const galleryImages = Object.values(
-    import.meta.glob("../assets/gallery/**/*.{png,jpg,jpeg,webp,avif,gif}", {
-      eager: true,
-      import: "default",
-    })
-  ).sort((a, b) => a.localeCompare(b));
+  const heroSrcMap = import.meta.glob("../assets/gallery/**/*.{png,jpg,jpeg,webp,avif,gif}", {
+    eager: true,
+    import: "default",
+  });
+  const heroSrcsetMap = import.meta.glob("../assets/gallery/**/*.{png,jpg,jpeg,webp,avif,gif}", {
+    query: { format: "webp", w: "320;640;960;1200", as: "srcset" },
+    eager: true,
+    import: "default",
+  });
+  const galleryImages = Object.keys(heroSrcMap)
+    .sort((a, b) => a.localeCompare(b))
+    .map((path) => ({ src: heroSrcMap[path], srcset: heroSrcsetMap[path] }));
 
-  const heroImages = galleryImages.length > 0 ? galleryImages : ["/placeholder.svg"];
+  const heroImages =
+    galleryImages.length > 0 ? galleryImages : [{ src: "/placeholder.svg", srcset: undefined }];
   let heroImageIndex = $state(0);
   let slidesPaused = $state(false);
 
@@ -132,7 +139,9 @@
         <a href="/about/gallery" use:link class="glass group relative block h-full w-full overflow-hidden rounded-3xl rise-in [animation-delay:120ms]">
           {#key heroImageIndex}
             <img
-              src={heroImages[heroImageIndex]}
+              src={heroImages[heroImageIndex].src}
+              srcset={heroImages[heroImageIndex].srcset}
+              sizes="(min-width: 1024px) 40vw, 100vw"
               alt=""
               class="h-full w-full object-cover"
               loading="eager"
