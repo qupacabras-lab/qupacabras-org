@@ -14,7 +14,7 @@
     "svelte-spa-router": "^5.1.1"
   },
   "devDependencies": {
-    "@sveltejs/vite-plugin-svelte": "^7.1.2",
+    "@sveltejs/vite-plugin-svelte": "^7.1.4",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.38",
     "svelte": "^5.56.4",
